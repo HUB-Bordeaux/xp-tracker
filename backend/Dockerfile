@@ -4,6 +4,6 @@ COPY . .
 
 RUN npm install
 
-CMD [ "sh", "-c", "npx prisma migrate deploy && npm start" ]
+CMD [ "sh", "-c", "npx prisma migrate dev --name init && npm run start" ]
 
 EXPOSE 4000

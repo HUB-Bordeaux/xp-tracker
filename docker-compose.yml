@@ -21,7 +21,7 @@ services:
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_NAME=login_demo
+      - DB_NAME=xptracker
 
   db:
     image: postgres:15
