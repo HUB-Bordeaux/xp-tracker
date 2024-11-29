@@ -1,9 +1,8 @@
 import express from "express";
-import type { Application } from "express";
 import { apiRoutes } from "./router";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.use(express.json());
 app.use(express.urlencoded());
