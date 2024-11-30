@@ -1,0 +1,19 @@
+<template>
+    <div class="not-found">
+        <h1>404 - Page Not Found</h1>
+        <router-link to="/">Go back to Home</router-link>
+    </div>
+</template>
+
+<script lang="ts">
+export default {
+    name: 'NotFoundView',
+};
+</script>
+
+<style scoped>
+.not-found {
+    text-align: center;
+    margin-top: 50px;
+}
+</style>
