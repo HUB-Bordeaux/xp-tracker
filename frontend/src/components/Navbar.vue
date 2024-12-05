@@ -2,7 +2,7 @@
     <nav class="navbar">
         <ul>
             <li><router-link to="/">Home</router-link></li>
-            <li v-if="auth.isAuthenticated">
+            <li v-if="authState.isAuth">
                 <button @click="logout" class="logout-btn">Logout</button>
             </li>
         </ul>
@@ -11,18 +11,21 @@
 
 <script lang="ts">
 import { useRouter } from 'vue-router';
-import auth from '../auth';
+import { authState } from '../auth';
+
 export default {
     name: 'AppNavbar',
     setup() {
         const router = useRouter();
+    
         const logout = () => {
-            auth.isAuthenticated = false;
+            authState.logout();
             router.push({name: 'login'});
-        };
+        }
+
         return {
-            auth,
-            logout
+            authState,
+            logout,
         }
     }
 };

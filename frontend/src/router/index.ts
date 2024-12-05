@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import auth from "../auth";
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
@@ -31,7 +30,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !auth.isAuthenticated)
+    const isAuthenticated = localStorage.getItem('authToken') !== null;
+    
+    if (to.meta.requiresAuth && !isAuthenticated)
         next({ name: 'login' });
     else
         next();

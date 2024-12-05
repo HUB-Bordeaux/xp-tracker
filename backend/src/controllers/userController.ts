@@ -49,7 +49,7 @@ export const loginUser = async (req: Request, res: Response) => {
         if (user && user.username === username) {
             const isPasswordMatching = await bcrypt.compare(password, user.password);
             if (isPasswordMatching)
-                res.status(200).json({message: "Login successful"});
+                res.status(200).json({token: "Token"});
             else
                 res.status(401).json({message: "Invalid username or password"});
         } else {

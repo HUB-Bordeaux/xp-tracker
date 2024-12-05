@@ -23,7 +23,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import auth from '../auth';
+import { authState } from '../auth';
 
 export default {
     name: 'LoginView',
@@ -54,8 +54,8 @@ export default {
                     const errorData = await response.json();
                     throw new Error(errorData.message || 'Invalid credentials');
                 }
-
-                auth.isAuthenticated = true;
+                const data = await response.json();
+                authState.login(data.token);
                 router.push({ name: 'home' });
             } catch (error: any) {
                 errorMessage.value = error.message || 'An error occurred during login';
