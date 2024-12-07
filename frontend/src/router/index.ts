@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
+import StudentsView from '../views/StudentsView.vue';
+import StudentView from '../views/StudentView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
 
 const routes = [
@@ -15,6 +17,23 @@ const routes = [
         name: 'login',
         component: LoginView,
         meta: { requiresAuth: false },
+    },
+    {
+        path: '/students',
+        name: 'students',
+        component: StudentsView,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/student',
+        redirect: '/students',
+    },
+    {
+        path: '/student/:id',
+        name: 'student',
+        component: StudentView,
+        meta: { requiresAuth: true },
+        props: true,
     },
     {
         path: '/:pathMatch(.*)*',
