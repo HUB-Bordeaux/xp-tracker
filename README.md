@@ -44,4 +44,5 @@ docker-compose down -v
 
 This project was developed by:
 
-- **[Karu](https://github.com/karumapathetic)** - Full-stack development, architecture, and implementation.
+- **[Karu](https://github.com/karumapathetic)** - Backend development.
+- **[Hope](https://github.com/ItsMeHope)** - Frontend development.
