@@ -1,26 +1,11 @@
-<template>
-    <div class="student-card">
-        <div class="student-card-header">
-            <h3>{{ student.name }}</h3>
-        </div>
-        <div class="student-card-body">
-            <p><strong>Age:</strong> {{ student.age }}</p>
-            <p><strong>Grade:</strong> {{ student.grade }}</p>
-        </div>
-        <div class="student-card-footer">
-            <slot name="footer">
-                <button @click="defaultAction" class="student-card-button">View Details</button>
-            </slot>
-        </div>
-    </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { Student } from '../interfaces/Students';
+import { Icon } from '@iconify/vue';
 
 export default defineComponent({
     name: 'StudentCard',
+    components: { Icon },
     props: {
         student: {
             type: Object as PropType<Student>,
@@ -29,47 +14,62 @@ export default defineComponent({
     },
     methods: {
         defaultAction() {
-            alert(`Viewing details for ${this.student.name}`);
         },
     },
 });
 </script>
 
+<template>
+    <div class="student-card">
+        <div class="student-card-header">
+            <Icon icon="mdi:account" class="profile-icon" />
+            <h3 class="student-name">{{ student.name }}</h3>
+        </div>
+        <div class="student-card-body">
+            <p><strong>Promo:</strong> {{ student.promo }}</p>
+        </div>
+        <div class="student-card-footer">
+            <slot name="footer">
+                <button @click="defaultAction">View Profile</button>
+            </slot>
+        </div>
+    </div>
+</template>
+
 <style scoped>
 .student-card {
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 8px 0;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 .student-card-header {
-    font-size: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 8px;
 }
 
-.student-card-body p {
-    margin: 4px 0;
+.student-name {
+    margin-top: 0.3125rem;
+}
+
+.profile-icon {
+    width: 6.25rem;
+    height: 6.25rem;
+}
+
+.student-card-body {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-top: -1.25rem;
 }
 
 .student-card-footer {
-    margin-top: 12px;
-    text-align: right;
-}
-
-.student-card-button {
-    background-color: #42b983;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.student-card-button:hover {
-    background-color: #369e70;
+    text-align: center;
 }
 </style>
