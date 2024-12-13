@@ -1,3 +1,23 @@
+<script lang="ts">
+import { Student } from '../interfaces/Students';
+import StudentCard from '../templates/StudentCard.vue';
+
+export default {
+    name: 'StudentsView',
+    components: {
+        StudentCard,
+    },
+    data() {
+        return {
+            students: [
+                {id: 1, name: 'Toto', promo: 2027},
+                {id: 2, name: 'Titi', promo: 2027},
+            ] as Student[],
+        };
+    },
+};
+</script>
+
 <template>
     <div class="students">
         <h1>Students List</h1>
@@ -13,44 +33,7 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Student } from '../interfaces/Students';
-import StudentCard from '../templates/StudentCard.vue';
-
-export default {
-    name: 'StudentsView',
-    components: {
-        StudentCard,
-    },
-    data() {
-        return {
-            students: [
-                {id: 1, name: 'Toto', age: 20, grade: 'A'},
-                {id: 2, name: 'Titi', age: 20, grade: 'A'},
-            ] as Student[],
-        };
-    },
-};
-</script>
-
 <style scoped>
-.home {
-    text-align: center;
-    margin-top: 50px;
-}
-
-.button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #42b983;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.button:hover {
-    background-color: #369e70;
-}
 
 .students {
     text-align: center;
@@ -65,18 +48,15 @@ export default {
 }
 
 .student-card-button {
-    background-color: #42b983;
+    background-color: #007bff;
     color: white;
     text-decoration: none;
-    border: none;
-    padding: 8px 12px;
+    padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
 }
 
 .student-card-button:hover {
-    background-color: #369e70;
+    background-color: #0056b3;
 }
-
 </style>

@@ -1,16 +1,7 @@
-<template>
-    <div class="student">
-        <h1>Student Details</h1>
-        <p v-if="student">Name: {{ student.name }}</p>
-        <p v-if="student">Age: {{ student.age }}</p>
-        <p v-if="student">Age: {{ student.grade }}</p>
-    </div>
-</template>
-
 <script lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Student } from '../interfaces/Students'
+import { Student } from '../interfaces/Students';
 
 export default {
     name: 'StudentView',
@@ -21,44 +12,49 @@ export default {
 
         onMounted(() => {
             const studentId = route.params.id;
-            alert(studentId)
-            // if (studentId == undefined) {
-            //     router.push({name: 'students'});
-            // }
 
             const mockStudents = [
-                {id: 1, name: 'Toto', age: 20, grade: 'A'},
-                {id: 2, name: 'Titi', age: 20, grade: 'A'},
+                { id: 1, name: 'Toto', promo: 2027 },
+                { id: 2, name: 'Titi', promo: 2027 },
             ];
 
             student.value = mockStudents.find(s => s.id === Number(studentId)) || null;
             if (student.value == null) {
-                router.push({name: 'students'});
+                router.push({ name: 'students' });
             }
         });
+
         return {
             student,
+            goBack: () => router.push('/students'),
         };
     },
 };
 </script>
 
+<template>
+    <div class="student">
+        <button class="back-btn" @click="goBack">Back</button>
+        <h1>Student Details</h1>
+        <p v-if="student">Name: {{ student.name }}</p>
+        <p v-if="student">Promo: {{ student.promo }}</p>
+    </div>
+</template>
+
 <style scoped>
-.home {
-    text-align: center;
-    margin-top: 50px;
-}
-
-.button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #42b983;
+.back-btn {
+    background-color: #f44336;
     color: white;
-    text-decoration: none;
-    border-radius: 5px;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    position: absolute;
+    top: 5rem;
+    left: 1rem;
 }
 
-.button:hover {
-    background-color: #369e70;
+.back-btn:hover {
+    background-color: #e53935;
 }
 </style>
