@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { authState } from '../auth';
+import { authState } from '../middleware/auth';
 
 export default {
     name: 'LoginView',
