@@ -24,7 +24,6 @@ export default {
     <nav class="navbar">
         <ul class="nav-left">
             <li><router-link to="/">Home</router-link></li>
-            <li><router-link to="/dashboard">Dashboard</router-link></li>
             <li><router-link to="/students">Students</router-link></li>
         </ul>
         <img src="../assets/xptracker.png" alt="XP Tracker" class="navbar-logo" />
@@ -37,13 +36,13 @@ export default {
 </template>
 
 <style scoped>
-
 .navbar {
     background-color: #007bff;
     padding: 0.625rem 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .nav-left,
@@ -53,6 +52,13 @@ export default {
     padding: 0;
     display: flex;
     gap: 1.25rem;
+}
+
+.navbar-logo {
+    max-height: 3rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .navbar li {
@@ -69,11 +75,6 @@ export default {
     text-decoration: underline;
 }
 
-.navbar-logo {
-    max-height: 45px;
-    margin-right: 10rem;
-}
-
 .logout-btn {
     background-color: #f44336;
     color: white;
@@ -87,4 +88,5 @@ export default {
 .logout-btn:hover {
     background-color: #e53935;
 }
+
 </style>

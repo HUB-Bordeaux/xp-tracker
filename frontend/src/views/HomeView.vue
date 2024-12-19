@@ -6,8 +6,7 @@ export default {
 
 <template>
     <div class="home">
-        <h1>Welcome to Home Page</h1>
-        <p>This is a basic Vue 3 home page built with Typescript.</p>
+        <h1>Welcome to XP Tracker Home Page</h1>
     </div>
 </template>
 

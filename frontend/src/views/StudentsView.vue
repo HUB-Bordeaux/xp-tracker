@@ -1,13 +1,17 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue';
-import { Student } from '../interfaces/Students';
-import StudentCard from '../templates/StudentCard.vue';
+import { Student } from '@/interfaces/Students';
+import StudentCard from '@/templates/StudentCard.vue';
+import PromoFilter from '@/components/PromoFilter.vue';
+import SearchBar from '@/components/SearchBar.vue';
 import downloadCSV from 'json-to-csv-export';
 
 export default defineComponent({
     name: 'StudentsView',
     components: {
         StudentCard,
+        PromoFilter,
+        SearchBar,
     },
     setup() {
         const students = ref<Student[]>([
@@ -15,29 +19,47 @@ export default defineComponent({
             { id: 2, name: 'Titi', promo: 2027 },
             { id: 3, name: 'Tata', promo: 2026 },
         ]);
-        const selectedPromo = ref<number | null>(null);
+        const selectedPromos = ref<number[]>([]);
+        const searchQuery = ref<string>('');
+
         const filteredStudents = computed(() =>
-            selectedPromo.value
-                ? students.value.filter(student => student.promo === selectedPromo.value)
-                : students.value
+            students.value.filter(
+                student =>
+                    (selectedPromos.value.length === 0 ||
+                        selectedPromos.value.includes(student.promo)) &&
+                    student.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+            )
         );
+
         const availablePromos = computed(() =>
             Array.from(new Set(students.value.map(student => student.promo)))
         );
+
         const handleExport = () => {
             downloadCSV({
                 data: filteredStudents.value,
-                filename: `students_${selectedPromo.value || 'all'}`,
+                filename: `students_${selectedPromos.value.join('_') || 'all'}`,
                 delimiter: ',',
                 headers: ['id', 'name', 'promo'],
             });
         };
+
+        const togglePromo = (promo: number) => {
+            if (selectedPromos.value.includes(promo)) {
+                selectedPromos.value = selectedPromos.value.filter(p => p !== promo);
+            } else {
+                selectedPromos.value.push(promo);
+            }
+        };
+
         return {
             students,
-            selectedPromo,
+            selectedPromos,
+            searchQuery,
             filteredStudents,
             availablePromos,
             handleExport,
+            togglePromo,
         };
     },
 });
@@ -47,19 +69,18 @@ export default defineComponent({
     <div class="students">
         <h1>Students List</h1>
 
-        <div class="filter">
-            <label for="promo-select">Filter by Promotion: </label>
-            <select id="promo-select" v-model="selectedPromo">
-                <option :value="null">All Promotions</option>
-                <option v-for="promo in availablePromos" :key="promo" :value="promo">
-                    {{ promo }}
-                </option>
-            </select>
-        </div>
+        <PromoFilter
+            :availablePromos="availablePromos"
+            :selectedPromos="selectedPromos"
+            :togglePromo="togglePromo"
+        />
 
-        <div class="actions">
-            <button class="export-button" @click="handleExport">Export CSV</button>
-        </div>
+        <button class="export-button" @click="handleExport">Export CSV</button>
+
+        <SearchBar
+            :searchQuery="searchQuery"
+            @update:searchQuery="searchQuery = $event"
+        />
 
         <div class="students-list">
             <StudentCard
@@ -80,25 +101,22 @@ export default defineComponent({
     </div>
 </template>
 
+
 <style scoped>
 .students {
     text-align: center;
-    padding: 20px;
-}
-
-.filter {
-    margin-bottom: 20px;
+    padding: 1.25rem;
 }
 
 .export-button {
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 16px;
-    font-size: 16px;
-    border-radius: 4px;
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
 .export-button:hover {
@@ -108,7 +126,7 @@ export default defineComponent({
 .students-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 1rem;
     justify-content: center;
 }
 
@@ -116,8 +134,8 @@ export default defineComponent({
     background-color: #007bff;
     color: white;
     text-decoration: none;
-    padding: 10px 16px;
-    border-radius: 4px;
+    padding: 0.625rem 1rem;
+    border-radius: 0.25rem;
     cursor: pointer;
 }
 
