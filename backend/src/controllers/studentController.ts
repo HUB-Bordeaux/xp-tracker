@@ -1,15 +1,46 @@
 import type { studentInfo } from "../interfaces/studentInterface";
+import { ActivityService } from "../services/activityServices";
+import { StudentActivityService } from "../services/studentActivityServices";
 import { StudentService } from "../services/studentServices";
 import type { Request, Response } from "express";
 
 const studentService = new StudentService();
+const activityService = new ActivityService();
+const studentActivityService = new StudentActivityService();
 
 export const getStudents = async (req: Request, res: Response) => {
     try {
         const students = await studentService.findAllStudent();
-        res.status(200).json({message: students});
+        const formatedStudents: any[] = []
+
+        for (const student of students) {
+            const studentActivities = await studentActivityService.getActivitiesByStudentId(student.id);
+            const activities = Promise.all(
+                studentActivities.map(async (studentActivity) => {
+                    const activity = await activityService.findActivityById(studentActivity.activityId);
+                    return {
+                        id: activity?.id,
+                        name: activity?.name,
+                        category: activity?.category,
+                        xpOrganisation: activity?.xpOrganisation,
+                        xpParticipation: activity?.xpParticipation,
+                        role: studentActivity.role,
+                        present: studentActivity.present
+                    };
+                })
+            );
+            formatedStudents.push({
+                id: student.id,
+                firstname: student.firstname,
+                lastname: student.lastname,
+                email: student.email,
+                promotion: student.promotion,
+                activities: activities
+            })
+        }
+        res.status(200).json({message: formatedStudents});
     } catch (error) {
-        console.error("Error querying the database on getAllStudents route: ", error);
+        console.error("Error querying the database on getStudents: ", error);
         res.status(500).json({message: "Internal server error"});
     }
 };
@@ -22,11 +53,34 @@ export const getStudentById = async (req: Request, res: Response) => {
     }
     try {
         const student = await studentService.findStudentById(+id);
-        if (student) {
-            res.status(200).json({student: student});
-        } else {
-            res.status(400).json({message: `Student with id ${id} does not exist`});
+        if (student === null) {
+            res.status(400).json({message: `Student not found with id: ${id}`});
+            return
         }
+        const studentActivities = await studentActivityService.getActivitiesByStudentId(student.id);
+        const activities = Promise.all(
+            studentActivities.map(async (studentActivity) => {
+                const activity = await activityService.findActivityById(studentActivity.activityId);
+                return {
+                    id: activity?.id,
+                    name: activity?.name,
+                    category: activity?.category,
+                    xpOrganisation: activity?.xpOrganisation,
+                    xpParticipation: activity?.xpParticipation,
+                    role: studentActivity.role,
+                    present: studentActivity.present
+                };
+            })
+        );
+        const formatedStudents = {
+            id: student.id,
+            firstname: student.firstname,
+            lastname: student.lastname,
+            email: student.email,
+            promotion: student.promotion,
+            activities: activities
+        }
+        res.status(200).json({message: formatedStudents});
     } catch(error) {
         console.error("Error querying the database on getStudentById route: ", error);
         res.status(500).json({message: "Internal server error"});
@@ -47,6 +101,37 @@ export const createStudent = async (req: Request, res: Response) => {
                 email: createdStudent.email,
             }
         });
+    } catch (error: any) {
+        res.status(400).json({message: error});
+    }
+}
+
+export const updateStudent = async (req: Request, res: Response) => {
+    const student : studentInfo = req.body;
+    const id = req.params.id;
+
+    try {
+        if (id === undefined) {
+            res.status(400).json({message: "Student ID not provided"});
+        } else {
+            await studentService.updateStudent(+id, student.firstName, student.lastName, student.email, student.promo);
+            res.status(200).json({message: "Student updated successfully"});
+        }
+    } catch (error: any) {
+        res.status(400).json({message: error});
+    }
+}
+
+export const deleteStudent = async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    try {
+        if (id === undefined) {
+            res.status(400).json({message: "Student ID not provided"});
+        } else {
+            await studentService.deleteStudent(+id);
+            res.status(200).json({message: "Student deleted successfully"});
+        }
     } catch (error: any) {
         res.status(400).json({message: error});
     }
