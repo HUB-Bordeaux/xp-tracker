@@ -1,31 +1,21 @@
 import { Router } from "express";
+import { getAllActivities, getAllHackathons, getAllTalks, getAllUserGroups, getAllFreeProjects, getOneActivity, updateActivity, deleteActivity, createActivity } from "../controllers/activityController";
+import { verifyToken } from "../middlewares/JWTmiddleware";
 
 const activityRoutes = Router();
 
-// activityRoutes.get("/activities", getAllActivities);
+activityRoutes.use(verifyToken);
 
-// activityRoutes.get("/activities/hackatons", getAllHackatons);
-// activityRoutes.get("/activities/hackatons/:id", getOneHackatons);
-// activityRoutes.post("/activities/hackatons", createHackaton);
-// activityRoutes.put("/activities/hackatons/:id", updateHackaton);
-// activityRoutes.delete("/activities/hackatons/:id", deleteHackaton);
+activityRoutes.get("/activities", getAllActivities);
 
-// activityRoutes.get("/activities/talks", getAllTalks);
-// activityRoutes.get("/activities/talks/:id", getOneTalks);
-// activityRoutes.post("/activities/talks", createTalk);
-// activityRoutes.put("/activities/talks/:id", updateTalk);
-// activityRoutes.delete("/activities/talks/:id", deleteTalk);
-
-// activityRoutes.get("/activities/usergroup", getAllUserGroup);
-// activityRoutes.get("/activities/usergroup/:id", getOneUserGroup);
-// activityRoutes.post("/activities/usergroup", createUserGroup);
-// activityRoutes.put("/activities/usergroup/:id", updateUserGroup);
-// activityRoutes.delete("/activities/usergroup/:id", deleteUserGroup);
-
-// activityRoutes.get("/activities/freeproject", getAllFreeProject);
-// activityRoutes.get("/activities/freeproject/:id", getOneFreeProject);
-// activityRoutes.post("/activities/freeproject", createFreeProject);
-// activityRoutes.put("/activities/freeproject/:id", updateFreeProject);
-// activityRoutes.delete("/activities/freeproject/:id", deleteFreeProject);
+activityRoutes.get("/activities/hackathons", getAllHackathons);
+activityRoutes.post("/activities/", createActivity);
+activityRoutes.get("/activities/hackathons", getAllHackathons);
+activityRoutes.get("/activities/talks", getAllTalks);
+activityRoutes.get("/activities/usergroups", getAllUserGroups);
+activityRoutes.get("/activities/freeprojects", getAllFreeProjects);
+activityRoutes.get("/activities/:id", getOneActivity);
+activityRoutes.put("/activities/:id", updateActivity);
+activityRoutes.delete("/activities/:id", deleteActivity);
 
 export default activityRoutes;

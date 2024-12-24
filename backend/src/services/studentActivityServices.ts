@@ -16,4 +16,31 @@ export class StudentActivityService {
             }
         });
     }
+
+    async createActivityStudent(studentId: number, activityId: number, role: string, present: boolean) {
+        return prisma.studentActivity.create({
+            data: {
+                studentId: studentId,
+                activityId: activityId,
+                role: role,
+                present: present,
+            }
+        })
+    }
+
+    async deleteStudentActivityByActivityId(id: number) {
+        return prisma.studentActivity.deleteMany({
+            where: {
+                activityId: id
+            }
+        })
+    }
+
+    async deleteStudentActivityByStudentId(id: number) {
+        return prisma.studentActivity.deleteMany({
+            where: {
+                studentId: id
+            }
+        })
+    }
 };

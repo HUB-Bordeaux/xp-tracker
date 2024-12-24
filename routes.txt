@@ -15,26 +15,11 @@
 
 
 /activities                 (GET)           OK
-/activities/hackatons       (GET)           KO
-/activities/hackatons/:id   (GET)           KO
-/activities/hackatons       (POST)          KO
-/activities/hackatons/:id   (PUT)           KO
-/activities/hackatons/:id   (DELETE)        KO
-
-/activities/talks           (GET)           KO
-/activities/talks/:id       (GET)           KO
-/activities/talks           (POST)          KO
-/activities/talks/:id       (PUT)           KO
-/activities/talks/:id       (DELETE)        KO
-
-/activities/usergroup       (GET)           KO
-/activities/usergroup/:id   (GET)           KO
-/activities/usergroup       (POST)          KO
-/activities/usergroup/:id   (PUT)           KO
-/activities/usergroup/:id   (DELETE)        KO
-
-/activities/freeproject     (GET)           KO
-/activities/freeproject/:id (GET)           KO
-/activities/freeproject     (POST)          KO
-/activities/freeproject/:id (PUT)           KO
-/activities/freeproject/:id (DELETE)        KO
+/activities/                (POST)          OK
+/activities/:id             (GET)           OK
+/activities/:id             (PUT)           OK
+/activities/:id             (DELETE)        OK
+/activities/hackathons      (GET)           OK
+/activities/talks           (GET)           OK
+/activities/usergroups      (GET)           OK
+/activities/freeprojects    (GET)           OK

@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import type { userCredentials } from "../interfaces/userInterfaces";
 import { UserService } from "../services/userServices";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const userService = new UserService();
 
@@ -10,7 +11,7 @@ export const getUsers = async (req: Request, res: Response) => {
         const users = await userService.getAllUsers();
         res.status(200).json({ message: users});
     } catch(error) {
-        console.error("Error querying the database on getAllUsers route: ", error);
+        console.error(error);
         res.status(500).json({message: "Internal server error"});
     }
 };
@@ -24,8 +25,11 @@ export const registerUser = async (req: Request, res: Response) => {
     }
     try {
         const newUser = await userService.registerUser(username, password);
+        const token = jwt.sign({id: newUser.id, username: newUser.username}, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRATION
+        });
         res.status(200).json({
-            message: "User registered successfully",
+            token: token,
             user: {
                 id: newUser.id,
                 username: newUser.username,
@@ -35,7 +39,7 @@ export const registerUser = async (req: Request, res: Response) => {
         if (error.message === "Username already exists") {
             res.status(409).json({message: "Username already exists"});
         } else {
-            console.error("Error during registration: ", error);
+            console.error(error);
             res.status(500).json({message: "Internal server error"});
         }
     }
@@ -52,15 +56,18 @@ export const loginUser = async (req: Request, res: Response) => {
         const user = await userService.findUserByUsername(username);
         if (user && user.username === username) {
             const isPasswordMatching = await bcrypt.compare(password, user.password);
+            const token = jwt.sign({id: user.id, username: user.username}, process.env.JWT_SECRET, {
+                expiresIn: process.env.JWT_EXPIRATION
+            });
             if (isPasswordMatching)
-                res.status(200).json({token: "Token"});
+                res.status(200).json({token: token});
             else
                 res.status(401).json({message: "Invalid username or password"});
         } else {
             res.status(401).json({message: "Invalid username or password"});
         }
     } catch(error) {
-        console.error("Error querying the database on login route: ", error);
+        console.error(error);
         res.status(500).json({message: "Internal server error"});
     }
 };
@@ -81,7 +88,7 @@ export const updateUser = async (req: Request, res: Response) => {
         await userService.deleteUser(+id);
         res.status(200).json({message: "User updated succesfully"});
     } catch (error) {
-        console.error("Error while updating a user");
+        console.error(error);
         res.status(500).json({message: "Internal server error"});
     }
 }
@@ -97,7 +104,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         await userService.deleteUser(+id);
         res.status(200).json({message: "User deleted successfully"});
     } catch (error) {
-        console.error("Error while deleting a user");
+        console.error(error);
         res.status(500).json({message: "Internal server error"});
     }
 }
