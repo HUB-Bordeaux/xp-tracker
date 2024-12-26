@@ -23,6 +23,8 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=xptracker
+      - JWT_SECRET=secret
+      - JWT_EXPIRATION=24h
 
   db:
     image: postgres:15

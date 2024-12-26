@@ -47,4 +47,26 @@ export class StudentService {
             }
         });
     }
+
+    async updateStudent(id: number, firstname: string, lastname: string, email: string, promo: number) {
+        return await prisma.student.update({
+            where: {
+                id: id
+            },
+            data: {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                promotion: promo
+            }
+        });
+    }
+
+    async deleteStudent(id: number) {
+        return await prisma.student.delete({
+            where: {
+                id: id
+            }
+        });
+    }
 }

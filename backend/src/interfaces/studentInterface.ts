@@ -3,5 +3,4 @@ export interface studentInfo {
     lastName: string;
     email :string;
     promo: number;
-    // image: File;
 }
