@@ -29,6 +29,8 @@ export const getStudents = async (req: Request, res: Response) => {
             }
             formatedStudents.push({
                 id: student.id,
+                image: student.image.toString('base64'),
+                imageType: student.imageType,
                 firstname: student.firstname,
                 lastname: student.lastname,
                 email: student.email,
@@ -70,6 +72,8 @@ export const getStudentById = async (req: Request, res: Response) => {
         }
         const formatedStudent = {
             id: student.id,
+            image: student.image.toString('base64'),
+            imageType: student.imageType,
             firstname: student.firstname,
             lastname: student.lastname,
             email: student.email,
@@ -84,11 +88,17 @@ export const getStudentById = async (req: Request, res: Response) => {
 };
 
 export const createStudent = async (req: Request, res: Response) => {
-    const newStudent : studentInfo = req.body;
+    const { firstName, lastName, email, promo } = req.body;
+    const image = req.file?.buffer;
+    const imageType = req.file?.mimetype;
 
     try {
-        const createdStudent = await studentService.createStudent(newStudent.firstName, newStudent.lastName, newStudent.email, newStudent.promo);
-        res.status(200).json({createdStudent});
+        if (!image || !imageType)
+            res.status(400).json({message: "Image is not provided or not valid"});
+        else {
+            const createdStudent = await studentService.createStudent(firstName, lastName, email, +promo, image, imageType);
+            res.status(200).json({createdStudent});
+        }
     } catch (error: any) {
         console.error(error);
         res.status(400).json({message: error});
@@ -96,14 +106,18 @@ export const createStudent = async (req: Request, res: Response) => {
 }
 
 export const updateStudent = async (req: Request, res: Response) => {
-    const student : studentInfo = req.body;
+    const { firstName, lastName, email, promo } = req.body;
+    const image = req.file?.buffer;
+    const imageType = req.file?.mimetype;
     const id = req.params.id;
 
     try {
         if (id === undefined) {
             res.status(400).json({message: "Student ID not provided"});
+        } else if (!image || !imageType) {
+            res.status(400).json({message: "Student image is not provided"});
         } else {
-            await studentService.updateStudent(+id, student.firstName, student.lastName, student.email, student.promo);
+            await studentService.updateStudent(+id, firstName, lastName, email, +promo, image, imageType);
             res.status(200).json({message: "Student updated successfully"});
         }
     } catch (error: any) {

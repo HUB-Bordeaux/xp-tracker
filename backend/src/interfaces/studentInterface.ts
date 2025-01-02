@@ -1,6 +1,6 @@
 export interface studentInfo {
     firstName: string;
     lastName: string;
-    email :string;
-    promo: number;
+    email: string;
+    promo: string;
 }
