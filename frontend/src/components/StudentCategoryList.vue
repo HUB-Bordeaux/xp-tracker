@@ -25,14 +25,12 @@ export default defineComponent({
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Date</th>
                         <th>XP</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in category.items" :key="item.title">
                         <td>{{ item.title }}</td>
-                        <td>{{ item.date }}</td>
                         <td>{{ item.xp }}</td>
                     </tr>
                 </tbody>
