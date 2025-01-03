@@ -18,12 +18,16 @@ export const getAllActivities = async (req: Request, res: Response) => {
             const students: any[] = [];
             for (const studentActivity of studentActivities) {
                 const student = await studentService.findStudentById(studentActivity.studentId);
+                if (student === null)
+                    continue;
                 students.push({
-                    id: student?.id,
-                    firstname: student?.firstname,
-                    lastname: student?.lastname,
-                    email: student?.email,
-                    promotion: student?.promotion,
+                    id: student.id,
+                    image: student.image.toString('base64'),
+                    imageType: student.imageType,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    email: student.email,
+                    promotion: student.promotion,
                     role: studentActivity.role,
                     present: studentActivity.present
                 })
@@ -54,12 +58,16 @@ export const getAllHackathons = async (req: Request, res: Response) => {
             const students: any[] = [];
             for (const studentActivity of studentActivities) {
                 const student = await studentService.findStudentById(studentActivity.studentId);
+                if (student === null)
+                    continue;
                 students.push({
-                    id: student?.id,
-                    firstname: student?.firstname,
-                    lastname: student?.lastname,
-                    email: student?.email,
-                    promotion: student?.promotion,
+                    id: student.id,
+                    image: student.image.toString('base64'),
+                    imageType: student.imageType,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    email: student.email,
+                    promotion: student.promotion,
                     role: studentActivity.role,
                     present: studentActivity.present
                 })
@@ -90,12 +98,16 @@ export const getAllTalks = async (req: Request, res: Response) => {
             const students: any[] = [];
             for (const studentActivity of studentActivities) {
                 const student = await studentService.findStudentById(studentActivity.studentId);
+                if (student === null)
+                    continue;
                 students.push({
-                    id: student?.id,
-                    firstname: student?.firstname,
-                    lastname: student?.lastname,
-                    email: student?.email,
-                    promotion: student?.promotion,
+                    id: student.id,
+                    image: student.image.toString('base64'),
+                    imageType: student.imageType,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    email: student.email,
+                    promotion: student.promotion,
                     role: studentActivity.role,
                     present: studentActivity.present
                 })
@@ -126,12 +138,16 @@ export const getAllUserGroups = async (req: Request, res: Response) => {
             const students: any[] = [];
             for (const studentActivity of studentActivities) {
                 const student = await studentService.findStudentById(studentActivity.studentId);
+                if (student === null)
+                    continue;
                 students.push({
-                    id: student?.id,
-                    firstname: student?.firstname,
-                    lastname: student?.lastname,
-                    email: student?.email,
-                    promotion: student?.promotion,
+                    id: student.id,
+                    image: student.image.toString('base64'),
+                    imageType: student.imageType,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    email: student.email,
+                    promotion: student.promotion,
                     role: studentActivity.role,
                     present: studentActivity.present
                 })
@@ -162,12 +178,16 @@ export const getAllFreeProjects = async (req: Request, res: Response) => {
             const students: any[] = [];
             for (const studentActivity of studentActivities) {
                 const student = await studentService.findStudentById(studentActivity.studentId);
+                if (student === null)
+                    continue;
                 students.push({
-                    id: student?.id,
-                    firstname: student?.firstname,
-                    lastname: student?.lastname,
-                    email: student?.email,
-                    promotion: student?.promotion,
+                    id: student.id,
+                    image: student.image.toString('base64'),
+                    imageType: student.imageType,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    email: student.email,
+                    promotion: student.promotion,
                     role: studentActivity.role,
                     present: studentActivity.present
                 })
@@ -205,12 +225,16 @@ export const getOneActivity = async (req: Request, res: Response) => {
         const students: any[] = [];
         for (const studentActivity of studentActivities) {
             const student = await studentService.findStudentById(studentActivity.studentId);
+            if (student === null)
+                continue;
             students.push({
-                id: student?.id,
-                firstname: student?.firstname,
-                lastname: student?.lastname,
-                email: student?.email,
-                promotion: student?.promotion,
+                id: student.id,
+                image: student.image.toString('base64'),
+                imageType: student.imageType,
+                firstname: student.firstname,
+                lastname: student.lastname,
+                email: student.email,
+                promotion: student.promotion,
                 role: studentActivity.role,
                 present: studentActivity.present
             })

@@ -37,18 +37,20 @@ export class StudentService {
         return await prisma.student.findMany();
     }
 
-    async createStudent(firstname: string, lastname: string, email: string, promo: number) {
+    async createStudent(firstname: string, lastname: string, email: string, promo: number, image: Buffer, imageType: string) {
         return await prisma.student.create({
             data: {
                 firstname: firstname,
                 lastname: lastname,
                 email: email,
-                promotion: promo
+                promotion: promo,
+                image: image,
+                imageType: imageType
             }
         });
     }
 
-    async updateStudent(id: number, firstname: string, lastname: string, email: string, promo: number) {
+    async updateStudent(id: number, firstname: string, lastname: string, email: string, promo: number, image: Buffer, imageType: string) {
         return await prisma.student.update({
             where: {
                 id: id
@@ -57,7 +59,9 @@ export class StudentService {
                 firstname: firstname,
                 lastname: lastname,
                 email: email,
-                promotion: promo
+                promotion: promo,
+                image: image,
+                imageType: imageType
             }
         });
     }
