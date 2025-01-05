@@ -264,20 +264,22 @@ export default defineComponent({
 }
 
 .student-form {
-    margin: 1rem auto;
-    padding: 1rem;
+    margin: 0 auto;
+    padding: 1.5rem;
     background-color: #007bff;
     color: white;
-    border: 1px solid #ccc;
+    border: 1px solid #0056b3;
     border-radius: 8px;
-    text-align: left;
+    width: 60%;
+    max-width: 600px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .student-form input {
     display: block;
     margin: 0.5rem auto;
     padding: 0.5rem;
-    width: 60%;
+    width: 90%;
 }
 
 .add-student-button {

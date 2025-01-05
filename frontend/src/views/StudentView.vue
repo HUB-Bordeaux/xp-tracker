@@ -1,17 +1,12 @@
 <script lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Student } from '@/interfaces/Students';
+import type { Student, Activity } from '@/interfaces/Students';
+import type { Category, CategoryItem } from '@/interfaces/Category';
 import StudentDetails from '@/components/StudentDetails.vue';
 import CategoryList from '@/components/StudentCategoryList.vue';
 import BackButton from '@/components/BackButton.vue';
 import Cookies from 'js-cookie';
-import type { CategoryItem } from '@/interfaces/Category';
-
-export interface StudentSelect {
-    id: number;
-    name: string;
-}
 
 export default {
     name: 'StudentView',
@@ -20,40 +15,37 @@ export default {
         const route = useRoute();
         const router = useRouter();
         const student = ref<Student | null>(null);
-        const students = ref<StudentSelect[]>([]);
         const showForm = ref(false);
         const formData = ref({
-            studentId: 0,
-            role: 'Participant',
-            present: false,
-            activityName: '',
+            name: '',
             category: '',
-            line6: '',
-            line7: '',
+            xpOrganisation: 0,
+            xpParticipation: -1,
+            students: [
+                {
+                    studentId: 0,
+                    role: 'Participant',
+                    present: false,
+                },
+            ],
         });
 
-        const categories = ref([
+        const categories = ref<Category[]>([
             {
                 name: 'Talk',
-                items: [
-                    { title: 'Vue.js Basics', xp: '1' },
-                    { title: 'Advanced TypeScript', xp: '1' },
-                ],
+                items: [],
             },
             {
                 name: 'User Group',
-                items: [
-                    { title: 'Frontend Developers', xp: '1' },
-                    { title: 'Backend Gurus', xp: '1' },
-                ],
+                items: [],
             },
             {
                 name: 'Hackathon',
-                items: [{ title: 'Hack the Future', xp: '10' }],
+                items: [],
             },
             {
                 name: 'Free Project',
-                items: [{ title: 'Portfolio Website', xp: '10' }],
+                items: [],
             },
         ]);
 
@@ -83,8 +75,10 @@ export default {
                     lastname: result.lastname,
                     promo: parseInt(result.promotion),
                     image: result.image,
+                    activities: result.activities || [],
                 };
-                formData.value.studentId = student.value.id;
+                processActivities(student.value.activities);
+                formData.value.students[0].studentId = student.value.id;
             } catch (error) {
                 console.error('Failed to fetch student:', error);
                 alert(`Error: ${error}`);
@@ -92,33 +86,60 @@ export default {
             }
         };
 
-        const fetchStudents = async () => {
-            const token = Cookies.get('authToken');
-            if (!token) {
-                alert('Authorization token not found. Please log in again.');
-                return;
-            }
+        const processActivities = (activities: Activity[]) => {
+            categories.value.forEach(category => {
+                category.items = [];
+            });
 
-            try {
-                const response = await fetch('http://localhost:4000/students', {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`);
+            activities.forEach((activity: Activity) => {
+                switch (activity.category) {
+                    case 'talk':
+                        categories.value[0].items.push({
+                            title: activity.name,
+                            xpOrganisation: activity.xpOrganisation.toString(),
+                            xpParticipation: activity.xpParticipation.toString(),
+                        });
+                        break;
+                    case 'usergroup':
+                        categories.value[1].items.push({
+                            title: activity.name,
+                            xpOrganisation: activity.xpOrganisation.toString(),
+                            xpParticipation: activity.xpParticipation.toString(),
+                        });
+                        break;
+                    case 'hackathon':
+                        categories.value[2].items.push({
+                            title: activity.name,
+                            xpOrganisation: activity.xpOrganisation.toString(),
+                            xpParticipation: activity.xpParticipation.toString(),
+                        });
+                        break;
+                    case 'freeproject':
+                        categories.value[3].items.push({
+                            title: activity.name,
+                            xpOrganisation: activity.xpOrganisation.toString(),
+                            xpParticipation: activity.xpParticipation.toString(),
+                        });
+                        break;
                 }
+            });
+        };
 
-                const result = await response.json();
-                students.value = result.map((student: any) => ({
-                    id: student.id,
-                    name: `${student.firstname} ${student.lastname}`,
-                }));
-            } catch (error) {
-                console.error('Failed to fetch students:', error);
-                alert(`Error: ${error}`);
+        const formsPresenceUpdater = () => {
+            const student = formData.value.students[0];
+
+            if (!student.present) {
+                if (student.role === 'Organizer') {
+                    formData.value.xpOrganisation = -7;
+                    formData.value.xpParticipation = 0;
+                }
+                if (student.role === 'Participant') {
+                    formData.value.xpParticipation = -1;
+                    formData.value.xpOrganisation = 0;
+                }
+            } else {
+                formData.value.xpOrganisation = 0;
+                formData.value.xpParticipation = 0;
             }
         };
 
@@ -145,6 +166,7 @@ export default {
 
                 alert('Activity submitted successfully!');
                 showForm.value = false;
+                fetchStudent(Number(route.params.id));
             } catch (error) {
                 console.error('Failed to submit activity:', error);
                 alert(`Error: ${error}`);
@@ -152,23 +174,27 @@ export default {
         };
 
         const totalXP = (items: CategoryItem[]): number => {
-            return items.reduce((total, item) => total + Number(item.xp), 0);
+            return items.reduce((total, item) => total + Number(item.xpOrganisation) + Number(item.xpParticipation), 0);
         };
 
         onMounted(() => {
             const studentId = Number(route.params.id);
             fetchStudent(studentId);
-            fetchStudents();
         });
+
+        watch(
+            () => [formData.value.students[0].present, formData.value.students[0].role],
+            formsPresenceUpdater
+        );
 
         return {
             student,
-            students,
             categories,
             totalXP,
             showForm,
             formData,
             submitForm,
+            formsPresenceUpdater,
         };
     },
 };
@@ -185,13 +211,13 @@ export default {
         <div v-if="showForm" class="activity-form">
             <h2>Add Activity</h2>
             <label for="studentSelect">Select Student: </label>
-            <select id="studentSelect" v-model="formData.studentId">
+            <select id="studentSelect" v-model="formData.students[0].studentId">
                 <option :value="student?.id">{{ student?.firstname }} {{ student?.lastname }}</option>
             </select>
 
 
             <label for="roleSelect"> Select Role: </label>
-            <select id="roleSelect" v-model="formData.role">
+            <select id="roleSelect" v-model="formData.students[0].role">
                 <option value="Organizer">Organizer</option>
                 <option value="Participant">Participant</option>
             </select> <br />
@@ -204,16 +230,28 @@ export default {
                 <option value="talk">Talk</option>
             </select> <br />
 
-            <label for="activityName">Activity name:</label> <br />
+            <label for="name">Activity name:</label> <br />
+            <input id="name" v-model="formData.name" type="text" placeholder="Enter activity name" /> <br />
 
-            <input id="activityName" v-model="formData.activityName" type="text" placeholder="Enter activity name" /> <br />
+            <label for="xpOrganisation">XP Organizer:</label> <br />
+            <input
+                id="xpOrganisation"
+                type="number"
+                v-model="formData.xpOrganisation"
+                :disabled="formData.students[0].role === 'Participant' || (formData.students[0].role === 'Organizer' && !formData.students[0].present)"
+            />
 
-            <input v-model="formData.line6" type="text" placeholder="Line 6" /> <br />
-            <input v-model="formData.line7" type="text" placeholder="Line 7" /> <br />
+            <label for="xpOrganisation">XP Participant:</label> <br />
+            <input
+                id="xpParticipation"
+                type="number"
+                v-model="formData.xpParticipation"
+                :disabled="formData.students[0].role === 'Organizer' || (formData.students[0].role === 'Participant' && !formData.students[0].present)"
+            />
 
             <label class="checkbox-label">
                 Present :
-                <input type="checkbox" v-model="formData.present"/>
+                <input type="checkbox" v-model="formData.students[0].present"/>
             </label> <br />
 
             <button @click="submitForm">Submit Activity</button>
@@ -272,6 +310,11 @@ h1 {
 .activity-form input[type="checkbox"] {
     transform: scale(1.5);
     accent-color: green;
+}
+
+.activity-form input:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
 }
 
 .activity-button {

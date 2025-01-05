@@ -1,4 +1,10 @@
 export interface CategoryItem {
     title: string;
-    xp: string;
+    xpOrganisation: string;
+    xpParticipation: string;
+}
+
+export interface Category {
+    name: string;
+    items: CategoryItem[];
 }
