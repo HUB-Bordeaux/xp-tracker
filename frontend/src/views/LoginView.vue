@@ -1,29 +1,7 @@
-<template>
-    <div class="login">
-        <h2>Login</h2>
-        <form @submit.prevent="handleLogin">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input id="username" type="text" v-model="username" placeholder="Enter your username"/>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input id="password" type="password" v-model="password" placeholder="Enter your password"/>
-            </div>
-
-            <button type="submit" :disabled="loading">
-                {{ loading ? 'Logging in...' : 'Login' }}
-            </button>
-            <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-        </form>
-    </div>
-</template>
-
 <script lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { authState } from '../auth';
+import { authState } from '../middleware/auth';
 
 export default {
     name: 'LoginView',
@@ -74,6 +52,28 @@ export default {
     },
 };
 </script>
+
+<template>
+    <div class="login">
+        <h2>Login</h2>
+        <form @submit.prevent="handleLogin">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input id="username" type="text" v-model="username" placeholder="Enter your username"/>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" v-model="password" placeholder="Enter your password"/>
+            </div>
+
+            <button type="submit" :disabled="loading">
+                {{ loading ? 'Logging in...' : 'Login' }}
+            </button>
+            <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        </form>
+    </div>
+</template>
 
 <style scoped>
 .login {

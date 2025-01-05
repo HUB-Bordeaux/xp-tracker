@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { authState } from '../middleware/auth';
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import StudentsView from '../views/StudentsView.vue';
@@ -49,12 +50,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem('authToken') !== null;
-    
-    if (to.meta.requiresAuth && !isAuthenticated)
+    authState.checkAuth();
+
+    const isAuthenticated = authState.isAuth;
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
         next({ name: 'login' });
-    else
+    } else {
         next();
+    }
+});
+
+router.afterEach((to) => {
+    document.title = (to.meta.title as string) || 'XP Tracker';
 });
 
 export default router;
