@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue';
 import { Student } from '@/interfaces/Students';
+import Cookies from 'js-cookie';
 import StudentCard from '@/templates/StudentCard.vue';
 import PromoFilter from '@/components/PromoFilter.vue';
 import SearchBar from '@/components/SearchBar.vue';
@@ -14,21 +15,26 @@ export default defineComponent({
         SearchBar,
     },
     setup() {
-        const students = ref<Student[]>([
-            { id: 1, name: 'Toto', promo: 2027 },
-            { id: 2, name: 'Titi', promo: 2027 },
-            { id: 3, name: 'Tata', promo: 2026 },
-        ]);
+        const students = ref<Student[]>([]);
         const selectedPromos = ref<number[]>([]);
         const searchQuery = ref<string>('');
+        const showForm = ref(false);
+        const alertMessage = ref('');
+        const formData = ref({
+            firstName: '',
+            lastName: '',
+            email: '',
+            promo: '',
+            image: null as File | null,
+        });
 
         const filteredStudents = computed(() =>
-            students.value.filter(
-                student =>
-                    (selectedPromos.value.length === 0 ||
-                        selectedPromos.value.includes(student.promo)) &&
-                    student.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-            )
+            students.value.filter(student =>
+                (selectedPromos.value.length === 0 ||
+                selectedPromos.value.includes(student.promo)) &&
+                `${student.firstname} ${student.lastname}`
+                    .toLowerCase()
+                    .includes(searchQuery.value.toLowerCase()))
         );
 
         const availablePromos = computed(() =>
@@ -36,11 +42,18 @@ export default defineComponent({
         );
 
         const handleExport = () => {
+            const exportData = filteredStudents.value.map(student => ({
+                id: student.id,
+                firstname: student.firstname,
+                lastname: student.lastname,
+                promo: student.promo,
+            }));
+
             downloadCSV({
-                data: filteredStudents.value,
+                data: exportData,
                 filename: `students_${selectedPromos.value.join('_') || 'all'}`,
                 delimiter: ',',
-                headers: ['id', 'name', 'promo'],
+                headers: ['id', 'firstname', 'lastname', 'promo'],
             });
         };
 
@@ -52,6 +65,95 @@ export default defineComponent({
             }
         };
 
+        const toggleForm = () => {
+            showForm.value = !showForm.value;
+        };
+
+        const handleImageUpload = (event: Event) => {
+            const input = event.target as HTMLInputElement;
+            if (input.files && input.files[0]) {
+                formData.value.image = input.files[0];
+            }
+        };
+
+        const fetchStudents = async () => {
+            const token = Cookies.get('authToken');
+            if (!token) {
+                alert('Authorization token not found. Please log in again.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:4000/students', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                students.value = result.map((student: any) => ({
+                    id: student.id,
+                    firstname: student.firstname,
+                    lastname: student.lastname,
+                    promo: parseInt(student.promotion),
+                    image: student.image,
+                }));
+            } catch (error) {
+                console.error('Failed to fetch students:', error);
+                alert(`Error: ${error}`);
+            }
+        };
+        fetchStudents();
+
+        const uploadStudent = async () => {
+            const token = Cookies.get('authToken');
+            if (!token) {
+                alert('Authorization token not found. Please log in again.');
+                return;
+            }
+
+            const data = new FormData();
+            data.append('firstName', formData.value.firstName);
+            data.append('lastName', formData.value.lastName);
+            data.append('email', formData.value.email);
+            data.append('promo', formData.value.promo);
+
+            if (formData.value.image) {
+                data.append('image', formData.value.image);
+            }
+
+            try {
+                const response = await fetch('http://localhost:4000/students', {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                alertMessage.value = `Student ${formData.value.firstName} ${formData.value.lastName} uploaded successfully!`;
+                toggleForm();
+                await fetchStudents();
+            } catch (error) {
+                console.error('Failed to upload student:', error);
+                alertMessage.value = `Error: ${error}`;
+            }
+
+            setTimeout(() => {
+                alertMessage.value = '';
+            }, 3000);
+        };
+
+
         return {
             students,
             selectedPromos,
@@ -60,6 +162,12 @@ export default defineComponent({
             availablePromos,
             handleExport,
             togglePromo,
+            showForm,
+            formData,
+            toggleForm,
+            handleImageUpload,
+            alertMessage,
+            uploadStudent,
         };
     },
 });
@@ -76,11 +184,24 @@ export default defineComponent({
         />
 
         <button class="export-button" @click="handleExport">Export CSV</button>
+        <button class="add-student-button" @click="toggleForm">+ Add Student</button>
 
         <SearchBar
             :searchQuery="searchQuery"
             @update:searchQuery="searchQuery = $event"
         />
+
+        <div v-if="alertMessage" class="alert">{{ alertMessage }}</div>
+
+        <div v-if="showForm" class="student-form">
+            <h2>Add a New Student</h2>
+            <input v-model="formData.firstName" type="text" placeholder="First Name" />
+            <input v-model="formData.lastName" type="text" placeholder="Last Name" />
+            <input v-model="formData.email" type="email" placeholder="Email" />
+            <input v-model="formData.promo" type="number" placeholder="Promo Year" />
+            <input type="file" @change="handleImageUpload" />
+            <button @click="uploadStudent">Submit</button>
+        </div>
 
         <div class="students-list">
             <StudentCard
@@ -100,7 +221,6 @@ export default defineComponent({
         </div>
     </div>
 </template>
-
 
 <style scoped>
 .students {
@@ -141,5 +261,54 @@ export default defineComponent({
 
 .student-card-button:hover {
     background-color: #0056b3;
+}
+
+.student-form {
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #0056b3;
+    border-radius: 8px;
+    width: 60%;
+    max-width: 600px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.student-form input {
+    display: block;
+    margin: 0.5rem auto;
+    padding: 0.5rem;
+    width: 90%;
+}
+
+.add-student-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.625rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.add-student-button:hover {
+    background-color: #0056b3;
+}
+
+.alert {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 1rem;
+    margin: 1rem auto;
+    border: 1px solid #c3e6cb;
+    border-radius: 0.5rem;
+    transition: opacity 0.5s ease;
+    max-width: 300px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
 }
 </style>

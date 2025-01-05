@@ -24,12 +24,14 @@ export default defineComponent({
     background-color: #f44336;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1.5rem;
     border-radius: 0.25rem;
     cursor: pointer;
     position: absolute;
     top: 4rem;
-    left: 1rem;
+    left: 48%;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
 }
 
 .back-btn:hover {
