@@ -1,8 +1,16 @@
 export interface Activity {
     name: string;
+    category: string;
     xpOrganisation: number;
     xpParticipation: number;
-    category: string;
+}
+
+export interface ActivityWithStudents extends Activity {
+    students: StudentActivity[];
+}
+
+export interface StudentActivity {
+    studentId: number;
     role: string;
     present: boolean;
 }
