@@ -8,7 +8,6 @@ activityRoutes.use(verifyToken);
 
 activityRoutes.get("/activities", getAllActivities);
 
-activityRoutes.get("/activities/hackathons", getAllHackathons);
 activityRoutes.post("/activities/", createActivity);
 activityRoutes.get("/activities/hackathons", getAllHackathons);
 activityRoutes.get("/activities/talks", getAllTalks);

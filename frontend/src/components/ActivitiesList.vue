@@ -40,8 +40,8 @@ export default defineComponent({
                     <td>{{ activity.xpParticipation }}</td>
                     <td>
                         <ul>
-                            <li v-for="student in activity.students" :key="student.studentId">
-                                {{ student.studentId }} - {{ student.role }} - Present: {{ student.present }}
+                            <li v-for="student in activity.students" :key="student.id">
+                                {{ student.id }} - {{ student.role }} - Present: {{ student.present }}
                             </li>
                         </ul>
                     </td>

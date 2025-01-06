@@ -6,11 +6,17 @@ export interface Activity {
 }
 
 export interface ActivityWithStudents extends Activity {
-    students: StudentActivity[];
+    students: StudentActivityGet[];
 }
 
-export interface StudentActivity {
+export interface StudentActivityPost {
     studentId: number;
+    role: string;
+    present: boolean;
+}
+
+export interface StudentActivityGet {
+    id: number;
     role: string;
     present: boolean;
 }

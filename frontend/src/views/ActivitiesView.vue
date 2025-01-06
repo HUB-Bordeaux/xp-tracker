@@ -1,10 +1,12 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import type { Student, StudentActivity, ActivityWithStudents } from '@/interfaces/Students';
+import type { Student, StudentActivityPost, ActivityWithStudents } from '@/interfaces/Students';
+import ActivitiesList from '@/components/ActivitiesList.vue';
 import Cookies from 'js-cookie';
 
 export default defineComponent({
-    name: 'StudentsView',
+    name: 'ActivitiesView',
+    components: { ActivitiesList },
     setup() {
         const studentsList = ref<Student[]>([]);
         const activities = ref<ActivityWithStudents[]>([]);
@@ -15,7 +17,7 @@ export default defineComponent({
             category: '',
             xpOrganisation: 0,
             xpParticipation: 0,
-            students: [] as StudentActivity[],
+            students: [] as StudentActivityPost[],
         });
 
         const fetchStudents = async () => {
@@ -57,6 +59,7 @@ export default defineComponent({
                 alert('Authorization token not found. Please log in again.');
                 return;
             }
+            console.log("Submitting activity: ", formData.value);
 
             try {
                 const response = await fetch('http://localhost:4000/activities', {
@@ -73,6 +76,7 @@ export default defineComponent({
                 }
 
                 alert('Activity submitted successfully!');
+                fetchActivities();
                 showForm.value = false;
             } catch (error) {
                 console.error('Failed to submit activity:', error);
@@ -114,7 +118,7 @@ export default defineComponent({
                     xpOrganisation: activity.xpOrganisation,
                     xpParticipation: activity.xpParticipation,
                     students: activity.students.map((student: any) => ({
-                        studentId: student.studentId,
+                        id: student.id,
                         role: student.role,
                         present: student.present,
                     })),
@@ -169,7 +173,7 @@ export default defineComponent({
                 <div v-for="(student, index) in formData.students" :key="index" class="student-field">
                     <label for="studentSelect">Select Student: </label>
                     <select id="studentSelect" v-model="student.studentId">
-                        <option v-for="stud in studentsList" :key="stud.id" :value="stud.id">{{ stud.firstname }} {{ stud.lastname }}</option>
+                        <option v-for="stud in studentsList" :key="stud.id" :value="stud.id">{{ stud.id }} {{ stud.firstname }} {{ stud.lastname }}</option>
                     </select>
 
                     <label for="roleSelect">Select Role: </label>
