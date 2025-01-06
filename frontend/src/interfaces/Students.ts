@@ -1,4 +1,4 @@
-export interface Activity {
+export interface ActivityInfo {
     name: string;
     xpOrganisation: number;
     xpParticipation: number;
@@ -13,5 +13,6 @@ export interface Student {
     lastname: string;
     promo: number;
     image: string | null;
-    activities: Activity[];
+    imageType: string | null;
+    activities: ActivityInfo[];
 }

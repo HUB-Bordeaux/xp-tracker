@@ -1,12 +1,12 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Student } from '../interfaces/Students';
+import { Activity } from '../interfaces/Activities';
 
 export default defineComponent({
-    name: 'StudentCard',
+    name: 'ActivityCard',
     props: {
-        student: {
-            type: Object as PropType<Student>,
+        activity: {
+            type: Object as PropType<Activity>,
             required: true,
         },
     },
@@ -18,28 +18,23 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="student-card">
-        <div class="student-card-header">
-            <img
-                :src="student.image ? `data:image/${imageType};base64,${student.image}` : 'default-image.png'"
-                alt="Student Image"
-                class="student-image"
-            />
-            <h3 class="student-name">{{ student.firstname }} {{ student.lastname }}</h3>
+    <div class="activity-card">
+        <div class="activity-card-header">
+            <h3 class="activity-name">{{ activity.name }}</h3>
         </div>
-        <div class="student-card-body">
-            <p><strong>Promo:</strong> {{ student.promo }}</p>
+        <div class="activity-card-body">
+            <p><strong>Category:</strong> {{ activity.category }} </p>
         </div>
-        <div class="student-card-footer">
+        <div class="activity-card-footer">
             <slot name="footer">
-                <button @click="defaultAction">View Profile</button>
+                <button @click="defaultAction">View Activity</button>
             </slot>
         </div>
     </div>
 </template>
 
 <style scoped>
-.student-card {
+.activity-card {
     border: 1px solid #ddd;
     border-radius: 0.75rem;
     padding: 1.5rem;
@@ -48,7 +43,7 @@ export default defineComponent({
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
-.student-card-header {
+.activity-card-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -56,24 +51,24 @@ export default defineComponent({
     font-weight: bold;
 }
 
-.student-name {
+.activity-name {
     margin-top: 0.3125rem;
 }
 
-.student-image {
+.activity-image {
     width: 6.25rem;
     height: 6.25rem;
     object-fit: cover;
     border-radius: 50%;
 }
 
-.student-card-body {
+.activity-card-body {
     font-size: 1.25rem;
     text-align: center;
     margin-top: -1.25rem;
 }
 
-.student-card-footer {
+.activity-card-footer {
     text-align: center;
 }
 </style>
