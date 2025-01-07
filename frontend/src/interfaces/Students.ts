@@ -1,13 +1,32 @@
+export interface Student {
+    id: number;
+    firstname: string;
+    lastname: string;
+    promo: number;
+    image: string | null;
+    activities: Activity[];
+}
+
 export interface ActivityInfo {
     name: string;
+    category: string;
     xpOrganisation: number;
     xpParticipation: number;
-    category: string;
     role: string;
     present: boolean;
 }
 
-export interface Student {
+export interface ActivityWithStudents extends Activity {
+    students: StudentActivityGet[];
+}
+
+export interface StudentActivityPost {
+    studentId: number;
+    role: string;
+    present: boolean;
+}
+
+export interface StudentActivityGet {
     id: number;
     firstname: string;
     lastname: string;
@@ -15,4 +34,6 @@ export interface Student {
     image: string | null;
     imageType: string | null;
     activities: ActivityInfo[];
+    role: string;
+    present: boolean;
 }
