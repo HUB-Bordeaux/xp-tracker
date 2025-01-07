@@ -22,8 +22,8 @@ export const getAllActivities = async (req: Request, res: Response) => {
                     continue;
                 students.push({
                     id: student.id,
-                    image: student.image.toString('base64'),
-                    imageType: student.imageType,
+                    image: student.image ? student.image.toString('base64') : null,
+                    imageType: student.imageType ? student.imageType : "",
                     firstname: student.firstname,
                     lastname: student.lastname,
                     email: student.email,
@@ -62,8 +62,8 @@ export const getAllHackathons = async (req: Request, res: Response) => {
                     continue;
                 students.push({
                     id: student.id,
-                    image: student.image.toString('base64'),
-                    imageType: student.imageType,
+                    image: student.image ? student.image.toString('base64') : null,
+                    imageType: student.imageType ? student.imageType : "",
                     firstname: student.firstname,
                     lastname: student.lastname,
                     email: student.email,
@@ -102,8 +102,8 @@ export const getAllTalks = async (req: Request, res: Response) => {
                     continue;
                 students.push({
                     id: student.id,
-                    image: student.image.toString('base64'),
-                    imageType: student.imageType,
+                    image: student.image ? student.image.toString('base64') : null,
+                    imageType: student.imageType ? student.imageType : "",
                     firstname: student.firstname,
                     lastname: student.lastname,
                     email: student.email,
@@ -142,8 +142,8 @@ export const getAllUserGroups = async (req: Request, res: Response) => {
                     continue;
                 students.push({
                     id: student.id,
-                    image: student.image.toString('base64'),
-                    imageType: student.imageType,
+                    image: student.image ? student.image.toString('base64') : null,
+                    imageType: student.imageType ? student.imageType : "",
                     firstname: student.firstname,
                     lastname: student.lastname,
                     email: student.email,
@@ -182,8 +182,8 @@ export const getAllFreeProjects = async (req: Request, res: Response) => {
                     continue;
                 students.push({
                     id: student.id,
-                    image: student.image.toString('base64'),
-                    imageType: student.imageType,
+                    image: student.image ? student.image.toString('base64') : null,
+                    imageType: student.imageType ? student.imageType : "",
                     firstname: student.firstname,
                     lastname: student.lastname,
                     email: student.email,
@@ -229,8 +229,8 @@ export const getOneActivity = async (req: Request, res: Response) => {
                 continue;
             students.push({
                 id: student.id,
-                image: student.image.toString('base64'),
-                imageType: student.imageType,
+                image: student.image ? student.image.toString('base64') : null,
+                imageType: student.imageType ? student.imageType : "",
                 firstname: student.firstname,
                 lastname: student.lastname,
                 email: student.email,
