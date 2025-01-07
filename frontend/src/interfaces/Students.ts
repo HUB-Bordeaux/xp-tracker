@@ -7,7 +7,7 @@ export interface Student {
     activities: Activity[];
 }
 
-export interface Activity {
+export interface ActivityInfo {
     name: string;
     category: string;
     xpOrganisation: number;
@@ -30,6 +30,10 @@ export interface StudentActivityGet {
     id: number;
     firstname: string;
     lastname: string;
+    promo: number;
+    image: string | null;
+    imageType: string | null;
+    activities: ActivityInfo[];
     role: string;
     present: boolean;
 }

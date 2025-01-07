@@ -37,7 +37,7 @@ export class StudentService {
         return await prisma.student.findMany();
     }
 
-    async createStudent(firstname: string, lastname: string, email: string, promo: number, image: Buffer, imageType: string) {
+    async createStudent(firstname: string, lastname: string, email: string, promo: number, image?: Buffer, imageType?: string) {
         return await prisma.student.create({
             data: {
                 firstname: firstname,

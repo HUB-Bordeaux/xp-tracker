@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { Student, Activity } from '@/interfaces/Students';
+import type { Student, ActivityInfo } from '@/interfaces/Students';
 import type { Category, CategoryItem } from '@/interfaces/Category';
 import StudentDetails from '@/components/StudentDetails.vue';
 import CategoryList from '@/components/StudentCategoryList.vue';
@@ -61,6 +61,7 @@ export default {
                     lastname: result.lastname,
                     promo: parseInt(result.promotion),
                     image: result.image,
+                    imageType: result.imageType,
                     activities: result.activities || [],
                 };
                 processActivities(student.value);

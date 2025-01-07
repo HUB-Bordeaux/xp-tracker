@@ -21,7 +21,7 @@ export default defineComponent({
     <div class="student-card">
         <div class="student-card-header">
             <img
-                :src="student.image ? `data:image/png;base64,${student.image}` : 'default-image.png'"
+                :src="student.image ? `data:image/${imageType};base64,${student.image}` : 'default-image.png'"
                 alt="Student Image"
                 class="student-image"
             />
