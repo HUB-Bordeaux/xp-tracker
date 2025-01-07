@@ -63,7 +63,7 @@ export default {
                     image: result.image,
                     activities: result.activities || [],
                 };
-                processActivities(student.value.activities);
+                processActivities(student.value);
             } catch (error) {
                 console.error('Failed to fetch student:', error);
                 alert(`Error: ${error}`);
@@ -71,41 +71,37 @@ export default {
             }
         };
 
-        const processActivities = (activities: Activity[]) => {
+        const processActivities = (student: Student) => {
             categories.value.forEach(category => {
                 category.items = [];
             });
 
-            activities.forEach((activity: Activity) => {
-                switch (activity.category) {
-                    case 'talk':
-                        categories.value[0].items.push({
-                            title: activity.name,
-                            xpOrganisation: activity.xpOrganisation.toString(),
-                            xpParticipation: activity.xpParticipation.toString(),
-                        });
-                        break;
-                    case 'usergroup':
-                        categories.value[1].items.push({
-                            title: activity.name,
-                            xpOrganisation: activity.xpOrganisation.toString(),
-                            xpParticipation: activity.xpParticipation.toString(),
-                        });
-                        break;
-                    case 'hackathon':
-                        categories.value[2].items.push({
-                            title: activity.name,
-                            xpOrganisation: activity.xpOrganisation.toString(),
-                            xpParticipation: activity.xpParticipation.toString(),
-                        });
-                        break;
-                    case 'freeproject':
-                        categories.value[3].items.push({
-                            title: activity.name,
-                            xpOrganisation: activity.xpOrganisation.toString(),
-                            xpParticipation: activity.xpParticipation.toString(),
-                        });
-                        break;
+            student.activities.forEach((activity: Activity) => {
+                const organizerXp = activity.role === 'Organizer'
+                    ? activity.xpOrganisation
+                    : 0;
+
+                const partcipantXp = activity.role === 'Participant'
+                    ? activity.xpParticipation
+                    : 0;
+
+                const categoryIndex = (() => {
+                    switch (activity.category) {
+                        case 'talk': return 0;
+                        case 'usergroup': return 1;
+                        case 'hackathon': return 2;
+                        case 'freeproject': return 3;
+                        default: return -1;
+                    }
+                })();
+
+                if (categoryIndex !== -1) {
+                    categories.value[categoryIndex].items.push({
+                        title: activity.name,
+                        role: activity.role,
+                        xpOrganisation: organizerXp.toString(),
+                        xpParticipation: partcipantXp.toString(),
+                    });
                 }
             });
         };

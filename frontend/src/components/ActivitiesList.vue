@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent } from 'vue';
 import type { ActivityWithStudents } from '@/interfaces/Students';
 
 export default defineComponent({
@@ -10,12 +10,6 @@ export default defineComponent({
             required: true,
         },
     },
-    setup(props) {
-        onMounted(() => {
-            console.log('Activities list mounted', props.activities);
-        });
-    }
-
 });
 </script>
 
@@ -41,7 +35,7 @@ export default defineComponent({
                     <td>
                         <ul>
                             <li v-for="student in activity.students" :key="student.id">
-                                {{ student.id }} - {{ student.role }} - Present: {{ student.present }}
+                                {{ student.firstname }} {{ student.lastname }} - {{ student.role }} - {{ student.present ? 'Present' : 'Not present' }}
                             </li>
                         </ul>
                     </td>

@@ -1,5 +1,6 @@
 export interface CategoryItem {
     title: string;
+    role: string;
     xpOrganisation: string;
     xpParticipation: string;
 }
