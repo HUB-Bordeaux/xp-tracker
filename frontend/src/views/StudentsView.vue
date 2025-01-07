@@ -2,7 +2,7 @@
 import { defineComponent, computed, ref } from 'vue';
 import { Student } from '@/interfaces/Students';
 import Cookies from 'js-cookie';
-import StudentCard from '@/templates/StudentCard.vue';
+import StudentCard from '@/components/StudentCard.vue';
 import PromoFilter from '@/components/PromoFilter.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import downloadCSV from 'json-to-csv-export';
@@ -40,6 +40,11 @@ export default defineComponent({
         const availablePromos = computed(() =>
             Array.from(new Set(students.value.map(student => student.promo)))
         );
+
+        const recentYears  = computed((): number[] => {
+            const currentYear = new Date().getFullYear();
+            return Array.from({length: 5}, (_, i) => currentYear + i);
+        })
 
         const handleExport = () => {
             const exportData = filteredStudents.value.map(student => ({
@@ -102,6 +107,7 @@ export default defineComponent({
                     lastname: student.lastname,
                     promo: parseInt(student.promotion),
                     image: student.image,
+                    imageType: student.imageType,
                 }));
             } catch (error) {
                 console.error('Failed to fetch students:', error);
@@ -122,6 +128,7 @@ export default defineComponent({
             data.append('lastName', formData.value.lastName);
             data.append('email', formData.value.email);
             data.append('promo', formData.value.promo);
+            console.log(formData);
 
             if (formData.value.image) {
                 data.append('image', formData.value.image);
@@ -160,6 +167,7 @@ export default defineComponent({
             searchQuery,
             filteredStudents,
             availablePromos,
+            recentYears,
             handleExport,
             togglePromo,
             showForm,
@@ -198,8 +206,13 @@ export default defineComponent({
             <input v-model="formData.firstName" type="text" placeholder="First Name" />
             <input v-model="formData.lastName" type="text" placeholder="Last Name" />
             <input v-model="formData.email" type="email" placeholder="Email" />
-            <input v-model="formData.promo" type="number" placeholder="Promo Year" />
-            <input type="file" @change="handleImageUpload" />
+            <label for="promo-select">Select a promotion: </label>
+            <select v-model="formData.promo" id="promo-select">
+                <option v-for="year in recentYears" :key="year" :value="year">
+                    {{ year }}
+                </option>
+            </select>
+            <input type="file" @change="handleImageUpload" accept="image/*" />
             <button @click="uploadStudent">Submit</button>
         </div>
 

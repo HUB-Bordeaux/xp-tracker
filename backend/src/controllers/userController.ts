@@ -17,10 +17,10 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const registerUser = async (req: Request, res: Response) => {
-    const {username, password } : userCredentials = req.body;
+    const { username, password } : userCredentials = req.body;
 
     if (!username || !password) {
-        res.status(400).json({error: "Name and email are required" });
+        res.status(400).json({error: "Name and password are required" });
         return
     }
     try {
@@ -62,9 +62,9 @@ export const loginUser = async (req: Request, res: Response) => {
             if (isPasswordMatching)
                 res.status(200).json({token: token});
             else
-                res.status(401).json({message: "Invalid username or password"});
+                res.status(400).json({message: "Invalid username or password"});
         } else {
-            res.status(401).json({message: "Invalid username or password"});
+            res.status(400).json({message: "Invalid username or password"});
         }
     } catch(error) {
         console.error(error);

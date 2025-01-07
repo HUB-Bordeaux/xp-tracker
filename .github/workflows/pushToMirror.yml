@@ -1,0 +1,22 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  MIRROR_URL: git@github.com:HUB-Bordeaux/xp-tracker.git
+
+jobs:
+  push-to-mirror:
+    name: Push to Mirror
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push to Mirror
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ env.MIRROR_URL }}

@@ -27,6 +27,7 @@ export default defineComponent({
                         <th>Title</th>
                         <th>XP Organisation</th>
                         <th>XP Participation</th>
+                        <th>Presence</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,7 @@ export default defineComponent({
                         <td>{{ item.title }}</td>
                         <td>{{ item.xpOrganisation }}</td>
                         <td>{{ item.xpParticipation }}</td>
+                        <td>{{ item.present ? 'Present' : 'Not present' }}</td>
                     </tr>
                 </tbody>
             </table>

@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue';
 import StudentsView from '../views/StudentsView.vue';
 import StudentView from '../views/StudentView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
+import ActivitiesView from "@/views/ActivitiesView.vue";
 
 const routes = [
     {
@@ -41,6 +42,16 @@ const routes = [
         name: 'not-found',
         component: NotFoundView,
         meta: { requiresAuth: true },
+    },
+    {
+        path: '/activities',
+        name: 'activities',
+        component: ActivitiesView,
+        meta: { requiresAuth: true},
+    },
+    {
+        path: '/activity',
+        redirect: '/activities',
     },
 ];
 
