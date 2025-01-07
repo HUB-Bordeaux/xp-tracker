@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Upload Test</title>
+</head>
+<body>
+    <form>
+        <input type="file" id="imageInput" accept="image/*" />
+        <button type="button" onclick="uploadStudentWithImage()">Upload Student</button>
+    </form>
+
+    <h2>Students List</h2>
+    <div id="studentsList">
+    </div>
+
+    <script>
+        async function uploadStudentWithImage() {
+            const imageInput = document.getElementById('imageInput');
+            if (!(imageInput instanceof HTMLInputElement)) {
+                console.error('Could not find the image input element.');
+                return;
+            }
+            if (!imageInput.files || imageInput.files.length === 0) {
+                console.error('No image selected');
+                alert('Please select an image before uploading.');
+                return;
+            }
+            const file = imageInput.files[0];
+            console.log(`File selected: ${file.name}, size: ${file.size}`);
+            const formData = new FormData();
+            formData.append('firstName', 'John');
+            formData.append('lastName', 'Doe');
+            formData.append('email', 'john5.doe@example.com');
+            formData.append('promo', '2024');
+            formData.append('image', file);
+            try {
+                const response = await fetch('http://localhost:4000/students', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTczNTc5OTgzOSwiZXhwIjoxNzM1ODg2MjM5fQ.qMz1bkHokzvE4ES3d09nfbvkjdw9sxrUrTyqFPirNsI',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log('Student created:', result);
+                alert('Student uploaded successfully!');
+                fetchStudents();
+            } catch (error) {
+                console.error('Failed to upload student with image:', error);
+                alert(`Error: ${error}`);
+            }
+        }
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch('http://localhost:4000/students', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImlhdCI6MTczNTc5OTgzOSwiZXhwIjoxNzM1ODg2MjM5fQ.qMz1bkHokzvE4ES3d09nfbvkjdw9sxrUrTyqFPirNsI',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                const students = await response.json();
+                console.log(students);
+                displayStudents(students);
+            } catch (error) {
+                console.error('Failed to fetch students:', error);
+                alert(`Error: ${error}`);
+            }
+        }
+
+        function displayStudents(students) {
+            const studentsListDiv = document.getElementById('studentsList');
+            studentsListDiv.innerHTML = '';
+
+            students.forEach(student => {
+                console.log(student)
+                const studentDiv = document.createElement('div');
+                studentDiv.style.marginBottom = '20px';
+                studentDiv.innerHTML = `
+                    <h3>${student.firstname} ${student.lastname}</h3>
+                    <p>Email: ${student.email}</p>
+                    <p>Promo: ${student.promotion}</p>
+                    <p>Image:</p>
+                    <img src="data:${student.imageType};base64,${student.image}" alt="${student.firstname}'s Image" width="100" height="100" />
+                `;
+                studentsListDiv.appendChild(studentDiv);
+            });
+        }
+
+        window.onload = fetchStudents;
+    </script>
+</body>
+</html>
+

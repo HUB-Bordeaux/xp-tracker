@@ -1,11 +1,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { Student } from '../interfaces/Students';
-import { Icon } from '@iconify/vue';
 
 export default defineComponent({
     name: 'StudentCard',
-    components: { Icon },
     props: {
         student: {
             type: Object as PropType<Student>,
@@ -22,8 +20,12 @@ export default defineComponent({
 <template>
     <div class="student-card">
         <div class="student-card-header">
-            <Icon icon="mdi:account" class="profile-icon" />
-            <h3 class="student-name">{{ student.name }}</h3>
+            <img
+                :src="student.image ? `data:image/png;base64,${student.image}` : 'default-image.png'"
+                alt="Student Image"
+                class="student-image"
+            />
+            <h3 class="student-name">{{ student.firstname }} {{ student.lastname }}</h3>
         </div>
         <div class="student-card-body">
             <p><strong>Promo:</strong> {{ student.promo }}</p>
@@ -58,9 +60,11 @@ export default defineComponent({
     margin-top: 0.3125rem;
 }
 
-.profile-icon {
+.student-image {
     width: 6.25rem;
     height: 6.25rem;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .student-card-body {

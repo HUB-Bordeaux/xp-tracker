@@ -25,21 +25,24 @@ export default defineComponent({
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Date</th>
-                        <th>XP</th>
+                        <th>XP Organisation</th>
+                        <th>XP Participation</th>
+                        <th>Presence</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in category.items" :key="item.title">
                         <td>{{ item.title }}</td>
-                        <td>{{ item.date }}</td>
-                        <td>{{ item.xp }}</td>
+                        <td>{{ item.xpOrganisation }}</td>
+                        <td>{{ item.xpParticipation }}</td>
+                        <td>{{ item.present ? 'Present' : 'Not present' }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </template>
+
 
 <style scoped>
 .categories {
