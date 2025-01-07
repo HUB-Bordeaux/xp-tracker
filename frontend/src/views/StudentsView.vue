@@ -2,7 +2,7 @@
 import { defineComponent, computed, ref } from 'vue';
 import { Student } from '@/interfaces/Students';
 import Cookies from 'js-cookie';
-import StudentCard from '@/templates/StudentCard.vue';
+import StudentCard from '@/components/StudentCard.vue';
 import PromoFilter from '@/components/PromoFilter.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import downloadCSV from 'json-to-csv-export';
