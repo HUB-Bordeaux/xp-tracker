@@ -77,13 +77,13 @@ export default {
             });
 
             student.activities.forEach((activity: Activity) => {
-                const organizerXp = activity.role === 'Organizer'
-                    ? activity.xpOrganisation
-                    : 0;
+                const organizerXp = (activity.role === 'Organizer' && !activity.present)
+                    ? -7
+                    : (activity.role === 'Organizer' ? activity.xpOrganisation : 0);
 
-                const partcipantXp = activity.role === 'Participant'
-                    ? activity.xpParticipation
-                    : 0;
+                const participantXp = (activity.role === 'Participant' && !activity.present)
+                    ? -1
+                    : (activity.role === 'Participant' ? activity.xpParticipation : 0);
 
                 const categoryIndex = (() => {
                     switch (activity.category) {
@@ -100,7 +100,8 @@ export default {
                         title: activity.name,
                         role: activity.role,
                         xpOrganisation: organizerXp.toString(),
-                        xpParticipation: partcipantXp.toString(),
+                        xpParticipation: participantXp.toString(),
+                        present: activity.present,
                     });
                 }
             });

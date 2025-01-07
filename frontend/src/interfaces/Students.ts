@@ -13,6 +13,7 @@ export interface Activity {
     xpOrganisation: number;
     xpParticipation: number;
     role: string;
+    present: boolean;
 }
 
 export interface ActivityWithStudents extends Activity {

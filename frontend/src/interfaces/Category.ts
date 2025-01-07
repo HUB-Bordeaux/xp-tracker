@@ -3,6 +3,7 @@ export interface CategoryItem {
     role: string;
     xpOrganisation: string;
     xpParticipation: string;
+    present: boolean;
 }
 
 export interface Category {
