@@ -25,7 +25,6 @@ export default {
         <ul class="nav-left">
             <li><router-link to="/">Home</router-link></li>
             <li><router-link to="/students">Students</router-link></li>
-            <li><router-link to="/activities">Activities</router-link></li>
         </ul>
         <img src="../assets/xptracker.png" alt="XP Tracker" class="navbar-logo" />
         <ul class="nav-right" v-if="authState.isAuth">

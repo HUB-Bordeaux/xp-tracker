@@ -4,8 +4,6 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import StudentsView from '../views/StudentsView.vue';
 import StudentView from '../views/StudentView.vue';
-import ActivitiesView from '../views/ActivitiesView.vue'
-import ActivityView from '../views/ActivityView.vue'
 import NotFoundView from '../views/NotFoundView.vue';
 
 const routes = [
@@ -35,23 +33,6 @@ const routes = [
         path: '/student/:id',
         name: 'student',
         component: StudentView,
-        meta: { requiresAuth: true },
-        props: true,
-    },
-    {
-        path: '/activities',
-        name: 'activities',
-        component: ActivitiesView,
-        meta: { requiresAuth: true},
-    },
-    {
-        path: '/activity',
-        redirect: '/activities',
-    },
-    {
-        path: '/activity/:id',
-        name: 'activity',
-        component: ActivityView,
         meta: { requiresAuth: true },
         props: true,
     },
