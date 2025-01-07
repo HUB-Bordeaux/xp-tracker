@@ -19,6 +19,7 @@ export const getStudents = async (req: Request, res: Response) => {
             for (const studentActivity of studentActivities) {
                 const activity = await activityService.findActivityById(studentActivity.studentId);
                 activities.push({
+                    id: activity?.id,
                     name: activity?.name,
                     xpOrganisation: activity?.xpOrganisation,
                     xpParticipation: activity?.xpParticipation,
@@ -97,7 +98,10 @@ export const createStudent = async (req: Request, res: Response) => {
             res.status(400).json({message: "Image is not provided or not valid"});
         else {
             const createdStudent = await studentService.createStudent(firstName, lastName, email, +promo, image, imageType);
-            res.status(200).json({createdStudent});
+            if (!createdStudent)
+                res.status(404).json({message: "Student not found"});
+            else
+                res.status(200).json({createdStudent});
         }
     } catch (error: any) {
         console.error(error);
@@ -117,8 +121,11 @@ export const updateStudent = async (req: Request, res: Response) => {
         } else if (!image || !imageType) {
             res.status(400).json({message: "Student image is not provided"});
         } else {
-            await studentService.updateStudent(+id, firstName, lastName, email, +promo, image, imageType);
-            res.status(200).json({message: "Student updated successfully"});
+            const student = await studentService.updateStudent(+id, firstName, lastName, email, +promo, image, imageType);
+            if (!student)
+                res.status(404).json({message: "Student not found"});
+            else
+                res.status(200).json({message: "Student updated successfully"});
         }
     } catch (error: any) {
         console.error(error);
@@ -133,7 +140,11 @@ export const deleteStudent = async (req: Request, res: Response) => {
         if (id === undefined) {
             res.status(400).json({message: "Student ID not provided"});
         } else {
-            await studentService.deleteStudent(+id);
+            const student = await studentService.deleteStudent(+id);
+            if (!student) {
+                res.status(404).json({message: "Student not found"});
+                return;
+            }
             await studentActivityService.deleteStudentActivityByStudentId(+id);
             res.status(200).json({message: "Student deleted successfully"});
         }

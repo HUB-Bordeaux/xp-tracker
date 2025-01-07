@@ -8,9 +8,9 @@ const studentRoutes = Router();
 studentRoutes.use(verifyToken);
 
 studentRoutes.get("/students", getStudents);
-studentRoutes.get("/students/:id", getStudentById);
 studentRoutes.post("/students", express.json({limit: '10mb'}), upload, createStudent);
 studentRoutes.put("/students/:id", express.json({limit: '10mb'}), upload, updateStudent);
+studentRoutes.get("/students/:id", getStudentById);
 studentRoutes.delete("/students/:id", deleteStudent);
 
 export default studentRoutes;

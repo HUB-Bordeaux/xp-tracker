@@ -7,13 +7,12 @@ const activityRoutes = Router();
 activityRoutes.use(verifyToken);
 
 activityRoutes.get("/activities", getAllActivities);
-
-activityRoutes.get("/activities/hackathons", getAllHackathons);
-activityRoutes.post("/activities/", createActivity);
 activityRoutes.get("/activities/hackathons", getAllHackathons);
 activityRoutes.get("/activities/talks", getAllTalks);
 activityRoutes.get("/activities/usergroups", getAllUserGroups);
 activityRoutes.get("/activities/freeprojects", getAllFreeProjects);
+
+activityRoutes.post("/activities/", createActivity);
 activityRoutes.get("/activities/:id", getOneActivity);
 activityRoutes.put("/activities/:id", updateActivity);
 activityRoutes.delete("/activities/:id", deleteActivity);

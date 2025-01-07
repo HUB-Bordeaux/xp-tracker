@@ -24,7 +24,17 @@ Before you start, ensure you have the following installed:
 
 ## Quick Start
 
+### Backend API
+
+When the application is started, the [documentation](http://localhost:4000/docs) is available
+
 ### Starting the Project
+
+If it's the first time you launch the application, run the following command before running the next one  :
+
+```bash
+./firstStart.sh
+```
 
 To start the application, run the following command in the project directory :
 
@@ -44,5 +54,5 @@ docker-compose down -v
 
 This project was developed by:
 
-- **[Karu](https://github.com/karumapathetic)** - Backend development.
+- **[Karu](https://github.com/karumapathetic)** - Backend and Devops development.
 - **[Hope](https://github.com/ItsMeHope)** - Frontend development.
