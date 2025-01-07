@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { Student, Activity } from '@/interfaces/Students';
+import type { Student, ActivityInfo } from '@/interfaces/Students';
 import type { Category, CategoryItem } from '@/interfaces/Category';
 import StudentDetails from '@/components/StudentDetails.vue';
 import CategoryList from '@/components/StudentCategoryList.vue';
@@ -75,6 +75,7 @@ export default {
                     lastname: result.lastname,
                     promo: parseInt(result.promotion),
                     image: result.image,
+                    imageType: result.imageType,
                     activities: result.activities || [],
                 };
                 processActivities(student.value.activities);
@@ -86,12 +87,12 @@ export default {
             }
         };
 
-        const processActivities = (activities: Activity[]) => {
+        const processActivities = (activities: ActivityInfo[]) => {
             categories.value.forEach(category => {
                 category.items = [];
             });
 
-            activities.forEach((activity: Activity) => {
+            activities.forEach((activity: ActivityInfo) => {
                 switch (activity.category) {
                     case 'talk':
                         categories.value[0].items.push({
@@ -143,36 +144,6 @@ export default {
             }
         };
 
-        const submitForm = async () => {
-            const token = Cookies.get('authToken');
-            if (!token) {
-                alert('Authorization token not found. Please log in again.');
-                return;
-            }
-
-            try {
-                const response = await fetch('http://localhost:4000/activities', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(formData.value),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`);
-                }
-
-                alert('Activity submitted successfully!');
-                showForm.value = false;
-                fetchStudent(Number(route.params.id));
-            } catch (error) {
-                console.error('Failed to submit activity:', error);
-                alert(`Error: ${error}`);
-            }
-        };
-
         const totalXP = (items: CategoryItem[]): number => {
             return items.reduce((total, item) => total + Number(item.xpOrganisation) + Number(item.xpParticipation), 0);
         };
@@ -193,7 +164,6 @@ export default {
             totalXP,
             showForm,
             formData,
-            submitForm,
             formsPresenceUpdater,
         };
     },
@@ -206,56 +176,6 @@ export default {
         <h1>Student Details</h1>
         <StudentDetails :student="student" />
 
-        <button class="activity-button" @click="showForm = !showForm">{{ showForm ? 'Hide Form' : 'Add Activity' }}</button>
-
-        <div v-if="showForm" class="activity-form">
-            <h2>Add Activity</h2>
-            <label for="studentSelect">Select Student: </label>
-            <select id="studentSelect" v-model="formData.students[0].studentId">
-                <option :value="student?.id">{{ student?.firstname }} {{ student?.lastname }}</option>
-            </select>
-
-
-            <label for="roleSelect"> Select Role: </label>
-            <select id="roleSelect" v-model="formData.students[0].role">
-                <option value="Organizer">Organizer</option>
-                <option value="Participant">Participant</option>
-            </select> <br />
-
-            <label for="categorySelect">Select Category: </label>
-            <select id="categorySelect" v-model="formData.category">
-                <option value="hackathon">Hackathon</option>
-                <option value="usergroup">User Group</option>
-                <option value="freeproject">Free Project</option>
-                <option value="talk">Talk</option>
-            </select> <br />
-
-            <label for="name">Activity name:</label> <br />
-            <input id="name" v-model="formData.name" type="text" placeholder="Enter activity name" /> <br />
-
-            <label for="xpOrganisation">XP Organizer:</label> <br />
-            <input
-                id="xpOrganisation"
-                type="number"
-                v-model="formData.xpOrganisation"
-                :disabled="formData.students[0].role === 'Participant' || (formData.students[0].role === 'Organizer' && !formData.students[0].present)"
-            />
-
-            <label for="xpOrganisation">XP Participant:</label> <br />
-            <input
-                id="xpParticipation"
-                type="number"
-                v-model="formData.xpParticipation"
-                :disabled="formData.students[0].role === 'Organizer' || (formData.students[0].role === 'Participant' && !formData.students[0].present)"
-            />
-
-            <label class="checkbox-label">
-                Present :
-                <input type="checkbox" v-model="formData.students[0].present"/>
-            </label> <br />
-
-            <button @click="submitForm">Submit Activity</button>
-        </div>
         <CategoryList :categories="categories" :totalXP="totalXP" />
     </div>
 </template>

@@ -17,7 +17,7 @@ export default defineComponent({
     <div>
         <img
             v-if="student"
-            :src="student.image ? `data:image/png;base64,${student.image}` : 'default-image.png'"
+            :src="student.image ? `data:image/${student.imageType};base64,${student.image}` : 'default-image.png'"
             alt="Student Image"
             class="profile-icon"
         />
