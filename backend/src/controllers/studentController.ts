@@ -30,8 +30,8 @@ export const getStudents = async (req: Request, res: Response) => {
             }
             formatedStudents.push({
                 id: student.id,
-                image: student.image.toString('base64'),
-                imageType: student.imageType,
+                image: student.image ? student.image.toString('base64') : null,
+                imageType: student.imageType ? student.imageType : "",
                 firstname: student.firstname,
                 lastname: student.lastname,
                 email: student.email,
@@ -73,8 +73,8 @@ export const getStudentById = async (req: Request, res: Response) => {
         }
         const formatedStudent = {
             id: student.id,
-            image: student.image.toString('base64'),
-            imageType: student.imageType,
+            image: student.image ? student.image.toString('base64') : null,
+            imageType: student.imageType ? student.imageType : "",
             firstname: student.firstname,
             lastname: student.lastname,
             email: student.email,
@@ -94,15 +94,8 @@ export const createStudent = async (req: Request, res: Response) => {
     const imageType = req.file?.mimetype;
 
     try {
-        if (!image || !imageType)
-            res.status(400).json({message: "Image is not provided or not valid"});
-        else {
-            const createdStudent = await studentService.createStudent(firstName, lastName, email, +promo, image, imageType);
-            if (!createdStudent)
-                res.status(404).json({message: "Student not found"});
-            else
-                res.status(200).json({createdStudent});
-        }
+        const createdStudent = await studentService.createStudent(firstName, lastName, email, +promo, image, imageType);
+        res.status(200).json({createdStudent});
     } catch (error: any) {
         console.error(error);
         res.status(400).json({message: error});
