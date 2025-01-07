@@ -77,7 +77,7 @@ export default {
                 category.items = [];
             });
 
-            student.activities.forEach((activity: Activity) => {
+            student.activities.forEach((activity: ActivityInfo) => {
                 const organizerXp = (activity.role === 'Organizer' && !activity.present)
                     ? -7
                     : (activity.role === 'Organizer' ? activity.xpOrganisation : 0);

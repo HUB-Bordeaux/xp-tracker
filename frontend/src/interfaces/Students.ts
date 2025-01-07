@@ -4,7 +4,8 @@ export interface Student {
     lastname: string;
     promo: number;
     image: string | null;
-    activities: Activity[];
+    imageType: string | null;
+    activities: ActivityInfo[];
 }
 
 export interface ActivityInfo {
@@ -16,7 +17,7 @@ export interface ActivityInfo {
     present: boolean;
 }
 
-export interface ActivityWithStudents extends Activity {
+export interface ActivityWithStudents extends ActivityInfo {
     students: StudentActivityGet[];
 }
 
@@ -32,8 +33,5 @@ export interface StudentActivityGet {
     lastname: string;
     promo: number;
     image: string | null;
-    imageType: string | null;
     activities: ActivityInfo[];
-    role: string;
-    present: boolean;
 }
