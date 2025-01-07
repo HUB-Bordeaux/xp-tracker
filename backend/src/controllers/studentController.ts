@@ -17,7 +17,7 @@ export const getStudents = async (req: Request, res: Response) => {
             const studentActivities = await studentActivityService.getActivitiesByStudentId(student.id);
             const activities: any[] = [];
             for (const studentActivity of studentActivities) {
-                const activity = await activityService.findActivityById(studentActivity.studentId);
+                const activity = await activityService.findActivityById(studentActivity.activityId);
                 activities.push({
                     name: activity?.name,
                     xpOrganisation: activity?.xpOrganisation,
@@ -60,7 +60,7 @@ export const getStudentById = async (req: Request, res: Response) => {
         const studentActivities = await studentActivityService.getActivitiesByStudentId(student.id);
         const activities: any[] = [];
         for (const studentActivity of studentActivities) {
-            const activity = await activityService.findActivityById(studentActivity.studentId);
+            const activity = await activityService.findActivityById(studentActivity.activityId);
             activities.push({
                 name: activity?.name,
                 xpOrganisation: activity?.xpOrganisation,
