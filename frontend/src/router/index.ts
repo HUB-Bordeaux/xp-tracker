@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { authState } from '../middleware/auth';
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import StudentsView from '../views/StudentsView.vue';
 import StudentView from '../views/StudentView.vue';
+import ActivitiesView from '../views/ActivitiesView.vue'
+import ActivityView from '../views/ActivityView.vue'
 import NotFoundView from '../views/NotFoundView.vue';
 
 const routes = [
@@ -36,6 +39,23 @@ const routes = [
         props: true,
     },
     {
+        path: '/activities',
+        name: 'activities',
+        component: ActivitiesView,
+        meta: { requiresAuth: true},
+    },
+    {
+        path: '/activity',
+        redirect: '/activities',
+    },
+    {
+        path: '/activity/:id',
+        name: 'activity',
+        component: ActivityView,
+        meta: { requiresAuth: true },
+        props: true,
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
         component: NotFoundView,
@@ -49,12 +69,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem('authToken') !== null;
-    
-    if (to.meta.requiresAuth && !isAuthenticated)
+    authState.checkAuth();
+
+    const isAuthenticated = authState.isAuth;
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
         next({ name: 'login' });
-    else
+    } else {
         next();
+    }
+});
+
+router.afterEach((to) => {
+    document.title = (to.meta.title as string) || 'XP Tracker';
 });
 
 export default router;

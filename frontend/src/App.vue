@@ -1,20 +1,28 @@
-<template>
-    <div id="app">
-        <AppNavbar />
-        <router-view />
-    </div>
-</template>
-
 <script lang="ts">
+import { defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
 import AppNavbar from './components/Navbar.vue';
 
-export default {
+export default defineComponent({
     name: 'App',
     components: {
         AppNavbar,
     },
-};
+    setup() {
+        const route = useRoute();
+        return {
+            route,
+        };
+    },
+});
 </script>
+
+<template>
+    <div id="app">
+        <AppNavbar v-if="route.name !== 'login'" />
+        <router-view />
+    </div>
+</template>
 
 <style>
 #app {

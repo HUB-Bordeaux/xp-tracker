@@ -279,7 +279,11 @@ export const updateActivity = async (req: Request, res: Response) => {
     }
     try {
         await studentActivityService.deleteStudentActivityByActivityId(+id);
-        await activityService.updateActivity(+id, activity.name, activity.xpOrganisation, activity.xpParticipation, activity.category);
+        const updatedActivity = await activityService.updateActivity(+id, activity.name, activity.xpOrganisation, activity.xpParticipation, activity.category);
+        if (!updatedActivity) {
+            res.status(404).json({message: "Activity not found"});
+            return;
+        }
         for (const student of activity.students) {
             await studentActivityService.createActivityStudent(student.studentId, +id, student.role, student.present);
         }
@@ -298,7 +302,11 @@ export const deleteActivity = async (req: Request, res: Response) => {
         return;
     }
     try {
-        await activityService.deleteActivity(+id);
+        const activity = await activityService.deleteActivity(+id);
+        if (!activity) {
+            res.status(404).json({message: "Activity not found"});
+            return;
+        }
         await studentActivityService.deleteStudentActivityByActivityId(+id);
         res.status(200).json({message: "Activity deleted successfully"});
     } catch (error) {
