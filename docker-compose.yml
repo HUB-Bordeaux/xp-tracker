@@ -25,6 +25,8 @@ services:
       - DB_NAME=xptracker
       - JWT_SECRET=secret
       - JWT_EXPIRATION=24h
+      - ADMIN_USER=admin
+      - ADMIN_PASSWORD=admin
 
   db:
     image: postgres:15

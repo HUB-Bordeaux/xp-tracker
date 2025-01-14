@@ -39,7 +39,7 @@ If it's the first time you launch the application, run the following command bef
 To start the application, run the following command in the project directory :
 
 ```bash
-docker-compose up --build
+docker-compose up
 ```
 
 ### Stopping the Project
@@ -47,7 +47,7 @@ docker-compose up --build
 To stop the application, run the following command in the project directory :
 
 ```bash
-docker-compose down -v
+docker-compose down
 ```
 
 ## Credits
