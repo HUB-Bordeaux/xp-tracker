@@ -8,12 +8,23 @@ export async function hashPassword(password: string) {
 
 export async function fillDB() {
     try {
-        const adminPassword = await hashPassword('admin');
+        if (!process.env.ADMIN_PASSWORD || !process.env.ADMIN_USER) {
+            console.error("Admin credential aren't set in the environnement");
+            return;
+        }
+        const adminPassword = await hashPassword(process.env.ADMIN_PASSWORD);
 
-        await prisma.user.createMany({
-            data: [
-                { username: 'admin', password: adminPassword},
-            ],
+        await prisma.user.upsert({
+            where: {
+                username: process.env.ADMIN_USER,
+            },
+            update: {
+                password: adminPassword,
+            },
+            create: {
+                username: process.env.ADMIN_USER,
+                password: adminPassword,
+            },
         });
     } catch(error) {
         console.error("Error populating database: ", error);
