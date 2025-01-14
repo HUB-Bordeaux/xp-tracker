@@ -70,7 +70,7 @@ export default defineComponent({
                     throw new Error(`Error: ${response.status}`);
                 }
 
-                alert('Activity submitted successfully!');
+                // alert('Activity submitted successfully!');
                 showForm.value = false;
                 emit('formSubmitted');
             } catch (error) {
