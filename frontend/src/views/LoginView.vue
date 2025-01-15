@@ -17,7 +17,8 @@ export default {
             errorMessage.value = '';
 
             try {
-                const response = await fetch('http://localhost:4000/login', {
+                console.log(process.env.VUE_APP_BASE_URL);
+                const response = await fetch(`${process.env.VUE_APP_BASE_URL}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

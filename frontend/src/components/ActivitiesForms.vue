@@ -24,7 +24,7 @@ export default defineComponent({
             }
 
             try {
-                const response = await fetch('http://localhost:4000/students', {
+                const response = await fetch(`${process.env.VUE_APP_BASE_URL}/students`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export default defineComponent({
             }
 
             try {
-                const response = await fetch('http://localhost:4000/activities', {
+                const response = await fetch(`${process.env.VUE_APP_BASE_URL}/activities`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

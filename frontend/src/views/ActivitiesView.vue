@@ -19,7 +19,7 @@ export default defineComponent({
             }
 
             try {
-                const response = await fetch('http://localhost:4000/activities', {
+                const response = await fetch(`${process.env.VUE_APP_BASE_URL}/activities`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,

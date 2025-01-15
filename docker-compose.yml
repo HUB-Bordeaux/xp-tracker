@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     depends_on:
       - backend
+    environment:
+      BASE_URL: ${BASE_URL}
 
   backend:
     build: ./backend
@@ -18,15 +20,16 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=xptracker
-      - JWT_SECRET=secret
-      - JWT_EXPIRATION=24h
-      - ADMIN_USER=admin
-      - ADMIN_PASSWORD=admin
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: xptracker
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: 24h
+      ADMIN_USER: admin
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      BASE_URL: ${BASE_URL}
 
   db:
     image: postgres:15

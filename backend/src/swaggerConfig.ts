@@ -9,7 +9,7 @@ const swaggerDefinition: SwaggerOptions['swaggerDefinition'] = {
     },
     servers: [
         {
-            url: 'http://localhost:4000',
+            url: process.env.VUE_APP_BASE_URL,
             description: 'Development server',
         },
     ],

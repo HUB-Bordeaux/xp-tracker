@@ -43,7 +43,7 @@ export default {
             }
 
             try {
-                const response = await fetch(`http://localhost:4000/students/${studentId}`, {
+                const response = await fetch(`${process.env.VUE_APP_BASE_URL}/students/${studentId}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
