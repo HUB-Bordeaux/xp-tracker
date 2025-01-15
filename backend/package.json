@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "postinstall": "npx prisma generate && cd ../.. && npm run copy:prisma",
+    "copy:prisma": "cp node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node node_modules/@prisma/client/"
   },
   "dependencies": {
     "@prisma/client": "^6.0.0",
