@@ -57,7 +57,7 @@ services:
     ports:
       - '5050:8080'
     networks:
-      - server-side
+      - default
 
 volumes:
   pgdata:
